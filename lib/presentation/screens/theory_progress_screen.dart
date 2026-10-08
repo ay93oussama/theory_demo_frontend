@@ -17,6 +17,7 @@ import '../widgets/next_step_row.dart';
 import '../widgets/progress_header.dart';
 import '../widgets/road_sheet.dart';
 import '../widgets/section_card.dart';
+import '../widgets/section_progress_sheet.dart';
 import '../widgets/theory_progress_loading.dart';
 
 class TheoryProgressScreen extends StatefulWidget {
@@ -136,6 +137,7 @@ class _LoadedProgress extends StatelessWidget {
         requiredCount: progress.basicTopics.required,
         filledCount: progress.basicTopics.filledSegments,
         isComplete: progress.basicTopics.isComplete,
+        onTap: () => _showSection(context, initiallyBasic: true),
       ),
       SectionCard(
         title: AppStrings.sectionSpecial,
@@ -144,6 +146,7 @@ class _LoadedProgress extends StatelessWidget {
         requiredCount: progress.specialTopics.required,
         filledCount: progress.specialTopics.filledSegments,
         isComplete: progress.specialTopics.isComplete,
+        onTap: () => _showSection(context, initiallyBasic: false),
       ),
       NextStepRow(
         isReady: progress.completed,
@@ -199,6 +202,17 @@ class _LoadedProgress extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  void _showSection(BuildContext context, {required bool initiallyBasic}) {
+    showAppModalSheet(
+      context: context,
+      builder: (_) => SectionProgressSheet(
+        basic: state.display.basicSheet,
+        special: state.display.specialSheet,
+        initiallyBasic: initiallyBasic,
       ),
     );
   }

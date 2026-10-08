@@ -184,6 +184,8 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
           progress.specialTopics.required,
         ),
         specialStatus: _sectionStatus(progress.specialTopics),
+        basicSheet: _sectionSheet(progress, isBasic: true),
+        specialSheet: _sectionSheet(progress, isBasic: false),
         lessonsMeta: progress.completed
             ? AppStrings.step1Done
             : AppStrings.step1Meta(
@@ -202,6 +204,43 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
     TopicProgressStatus.inProgress => AppStrings.pillLeft(topic.remaining),
     TopicProgressStatus.complete => AppStrings.pillDone,
   };
+
+  SectionSheetDisplay _sectionSheet(
+    TheoryProgress progress, {
+    required bool isBasic,
+  }) {
+    final topic = isBasic ? progress.basicTopics : progress.specialTopics;
+    final other = isBasic ? progress.specialTopics : progress.basicTopics;
+    final title = isBasic ? AppStrings.sectionBasic : AppStrings.sectionSpecial;
+    final otherTitle = isBasic
+        ? AppStrings.sectionSpecial
+        : AppStrings.sectionBasic;
+    final completionAnswer = progress.completed
+        ? AppStrings.sectionTheoryDoneAnswer
+        : progress.remainingLessons == 0
+        ? AppStrings.sectionAwaitingCompletion
+        : AppStrings.sectionCompletionAnswer(
+            progress.basicTopics.remaining,
+            progress.specialTopics.remaining,
+          );
+    return (
+      title: title,
+      attendedLabel: AppStrings.attendedOf(topic.attended, topic.required),
+      statusLabel: _sectionStatus(topic),
+      requiredCount: topic.required,
+      filledCount: topic.filledSegments,
+      isComplete: topic.isComplete,
+      remainingAnswer: topic.isComplete
+          ? '${AppStrings.sectionFinished(title)} ${other.remaining > 0 ? AppStrings.sectionOtherRemaining(otherTitle, other.remaining) : completionAnswer}'
+          : AppStrings.sectionRemainingAnswer(
+              topic.attended,
+              topic.required,
+              topic.remaining,
+            ),
+      completionAnswer: completionAnswer,
+      otherSectionAction: AppStrings.sectionOtherAction(otherTitle),
+    );
+  }
 
   @override
   Future<void> close() {

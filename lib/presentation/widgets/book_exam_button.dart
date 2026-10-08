@@ -20,17 +20,20 @@ class BookExamButton extends StatefulWidget {
 class _BookExamButtonState extends State<BookExamButton>
     with SingleTickerProviderStateMixin {
   final _overlay = OverlayPortalController();
-  late final _animation =
-      AnimationController(vsync: this, duration: AppMotion.toast)
-        ..addStatusListener((status) {
-          if (status == AnimationStatus.dismissed) _overlay.hide();
-        });
-  late final _curve = CurvedAnimation(
-    parent: _animation,
-    curve: AppMotion.emphasized,
-  );
+  late final AnimationController _animation;
+  late final CurvedAnimation _curve;
   Timer? _timer;
   bool _reduceMotion = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animation = AnimationController(vsync: this, duration: AppMotion.toast)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.dismissed) _overlay.hide();
+      });
+    _curve = CurvedAnimation(parent: _animation, curve: AppMotion.emphasized);
+  }
 
   @override
   void didChangeDependencies() {

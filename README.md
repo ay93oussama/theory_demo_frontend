@@ -31,6 +31,18 @@ Task 8 verifies the app on both target simulators and improves screen-reader
 grouping: headings, explanatory copy, and retry remain separate, and errors use
 a live region. The approved visual layout is preserved.
 
+Tap either attendance card to open its section sheet. It shows attendance,
+remaining lessons, and three expandable German answers. The first answer starts
+open; the bottom button switches sections within the same sheet. The status chip
+sits at the top right beside `Dein Fortschritt`. Counts and completion copy come
+from the existing API through Cubit; lesson topics and dates are available from
+the driving school's timetable. The road sheet remains on the next-step row.
+The section sheet was checked against the live API on iPhone 17 Pro Max, and the
+updated app launched successfully on the Android emulator. Widget tests cover
+expansion, section switching, exact chip alignment, dynamic counts, excess
+attendance, API completion precedence, and 2× text with reduced motion.
+See the [completed section sheet](docs/screenshots/section-sheet/iphone-completed-faq.png).
+
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
 its commit; work on the next task starts only after the user's instruction.

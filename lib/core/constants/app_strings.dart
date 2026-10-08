@@ -46,6 +46,37 @@ abstract final class AppStrings {
   static const nextStepArrow = '→';
   static const chevron = '›';
   static const pillDone = 'Alles besucht';
+  static const sectionProgress = 'Dein Fortschritt';
+  static const sectionOpen = 'Details anzeigen';
+  static const sectionRemainingQuestion = 'Was fehlt mir noch?';
+  static const sectionTimetableQuestion =
+      'Wo finde ich den nächsten Unterricht?';
+  static const sectionCompletionQuestion = 'Wann ist meine Theorie erledigt?';
+  static const sectionTimetableAnswer =
+      'Prüfe den Unterrichtsplan deiner Fahrschule. Dort findest du Themen und Termine für deinen nächsten Unterricht.';
+  static const sectionTheoryDoneAnswer =
+      'Deine Theorie ist erledigt. Als Nächstes folgt die Theorieprüfung.';
+  static const sectionAwaitingCompletion =
+      'Beide Abschnitte sind vollständig besucht. Dein Gesamtabschluss ist noch nicht bestätigt.';
+  static String sectionOtherAction(String title) => '$title ansehen →';
+  static String sectionFinished(String title) => '$title ist abgeschlossen.';
+  static String sectionOtherRemaining(String title, int remaining) =>
+      'Im $title ${remaining == 1 ? 'fehlt' : 'fehlen'} noch $remaining '
+      '${remaining == 1 ? 'Unterricht' : 'Unterrichte'}.';
+  static String sectionRemainingAnswer(
+    int attended,
+    int required,
+    int remaining,
+  ) =>
+      'Du hast $attended von $required Unterrichten besucht. Noch $remaining '
+      '${remaining == 1 ? 'Unterricht fehlt' : 'Unterrichte fehlen'} in diesem Abschnitt.';
+  static String sectionCompletionAnswer(
+    int basicRemaining,
+    int specialRemaining,
+  ) =>
+      'Für die fertige Theorie musst du beide Abschnitte abschließen. '
+      'Noch $basicRemaining ${basicRemaining == 1 ? 'Grundstoffunterricht' : 'Grundstoffunterrichte'} '
+      'und $specialRemaining ${specialRemaining == 1 ? 'Spezialstoffunterricht' : 'Spezialstoffunterrichte'} offen.';
   static const nextTitle = 'Als Nächstes: Theorieprüfung';
   static const nextLocked =
       'Wird freigeschaltet, sobald die Theorie erledigt ist';

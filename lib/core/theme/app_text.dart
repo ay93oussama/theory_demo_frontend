@@ -136,6 +136,11 @@ abstract final class AppText {
     fontWeight: FontWeight.w500,
     height: 1.4,
   );
+  static final sectionSheetAnswer = body.copyWith(fontSize: 14, height: 1.5);
+  static final sectionSheetQuestion = sectionHeading.copyWith(height: 1.4);
+  static final sectionSheetStatus = statusPill.copyWith(
+    color: AppColors.primaryInk,
+  );
   static const button = TextStyle(
     fontFamily: fontFamily,
     fontSize: 16,

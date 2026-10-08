@@ -39,7 +39,19 @@ final class TheoryProgressFailureState extends TheoryProgressState {
   List<Object?> get props => [...super.props, failure, message];
 }
 
-/// Prepared copy only. Counts, completion, and road statuses belong to domain.
+/// Prepared copy and rendering values. Progress decisions belong to domain.
+typedef SectionSheetDisplay = ({
+  String title,
+  String attendedLabel,
+  String statusLabel,
+  int requiredCount,
+  int filledCount,
+  bool isComplete,
+  String remainingAnswer,
+  String completionAnswer,
+  String otherSectionAction,
+});
+
 typedef ProgressDisplay = ({
   String status,
   String headline,
@@ -53,6 +65,8 @@ typedef ProgressDisplay = ({
   String specialStatus,
   String lessonsMeta,
   String examMeta,
+  SectionSheetDisplay basicSheet,
+  SectionSheetDisplay specialSheet,
 });
 
 final class TheoryProgressLoadedState extends TheoryProgressState {

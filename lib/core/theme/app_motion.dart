@@ -7,6 +7,7 @@ abstract final class AppMotion {
   static const loadingCurve = Curves.ease;
   static const none = Duration.zero;
   static const press = Duration(milliseconds: 120);
+  static const disclosure = Duration(milliseconds: 200);
 
   static const toast = Duration(milliseconds: 250);
   static const scrim = Duration(milliseconds: 250);

@@ -62,6 +62,10 @@ abstract final class AppDimensions {
   static const segmentGap = 6.0;
   static const sectionDoneSize = 18.0;
   static const sectionDoneCheckSize = 12.0;
+  static const sectionChevronSize = 16.0;
+  static const sectionQuestionPadding = EdgeInsets.symmetric(vertical: 14);
+  static const sectionAnswerPadding = EdgeInsets.only(bottom: 16);
+  static const sectionQuestionsPadding = EdgeInsets.symmetric(horizontal: 16);
   static const dashLength = 4.0;
   static const dashGap = 3.0;
   static const errorHaloSize = 72.0;
