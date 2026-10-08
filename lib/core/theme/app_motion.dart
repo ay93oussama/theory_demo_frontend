@@ -12,6 +12,11 @@ abstract final class AppMotion {
   static const loadingFade = Duration(milliseconds: 300);
   static const dataFade = Duration(milliseconds: 350);
   static const sheet = Duration(milliseconds: 320);
+  static final sheetScrimCurve = Interval(
+    0,
+    scrim.inMicroseconds / sheet.inMicroseconds,
+    curve: Curves.ease,
+  );
   static const color = Duration(milliseconds: 400);
   static const gauge = Duration(milliseconds: 900);
   static const gaugeDelay = Duration(milliseconds: 80);

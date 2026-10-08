@@ -189,6 +189,12 @@ test/
 
 ## Visual quality and assets
 
+The user's approved task-4 UI refinements take precedence over the original gauge
+and section screenshots: headline/subline above the gauge, plain colored status
+text, lighter gauge shadow, compact section typography and segments, neutral
+section borders, and a check icon with `Alles besucht`. Preserve these refinements
+when integrating later tasks. Other components still follow the handoff.
+
 - Match design colors, type, spacing, radii, shadow, and motion. Store them in
   `AppColors`, `AppText`, `AppDimensions`, `AppMotion`, and `AppTheme`. No literal
   colors, text styles, durations, or product strings inside widgets.

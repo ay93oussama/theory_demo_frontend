@@ -7,6 +7,9 @@ import 'package:theory_demo_frontend/core/theme/app_dimensions.dart';
 import 'package:theory_demo_frontend/domain/entities/theory_progress.dart';
 import 'package:theory_demo_frontend/domain/entities/topic_progress.dart';
 import 'package:theory_demo_frontend/presentation/widgets/error_card.dart';
+import 'package:theory_demo_frontend/presentation/widgets/app_modal_sheet.dart';
+import 'package:theory_demo_frontend/presentation/widgets/book_exam_button.dart';
+import 'package:theory_demo_frontend/presentation/widgets/road_sheet.dart';
 import 'package:theory_demo_frontend/presentation/widgets/gauge_card.dart';
 import 'package:theory_demo_frontend/presentation/widgets/next_step_row.dart';
 import 'package:theory_demo_frontend/presentation/widgets/progress_header.dart';
@@ -51,9 +54,28 @@ class _ComponentPreviewState extends State<_ComponentPreview> {
         )
       else ...[
         _gauge(),
+        if (_progress.completed) const BookExamButton(),
         _section(AppStrings.sectionBasic, _progress.basicTopics),
         _section(AppStrings.sectionSpecial, _progress.specialTopics),
-        NextStepRow(isReady: _progress.completed),
+        NextStepRow(
+          isReady: _progress.completed,
+          onTap: () => showAppModalSheet(
+            context: context,
+            builder: (_) => RoadSheet(
+              lessonsStatus: _progress.theoryLessonsStatus,
+              examStatus: _progress.theoryExamStatus,
+              lessonsMeta: _progress.completed
+                  ? AppStrings.step1Done
+                  : AppStrings.step1Meta(
+                      _progress.totalAttended,
+                      _progress.totalRequired,
+                    ),
+              examMeta: _progress.completed
+                  ? AppStrings.nextReady
+                  : AppStrings.nextLocked,
+            ),
+          ),
+        ),
       ],
     ];
     return Scaffold(

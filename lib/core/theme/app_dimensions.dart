@@ -89,9 +89,25 @@ abstract final class AppDimensions {
   static const enginePanelHeight = 228.0;
   static const skeletonHeight = 100.0;
   static const sheetHandleSize = Size(40, 5);
+  static const sheetCloseSize = 36.0;
+  static const sheetCloseIconSize = 16.0;
+  static const roadDotSize = 28.0;
+  static const roadConnectorWidth = 2.0;
+  static const roadConnectorMinHeight = 14.0;
+  static const roadCardPadding = EdgeInsets.fromLTRB(16, 16, 16, 4);
+  static const roadTextPadding = EdgeInsets.only(top: 3, bottom: 16);
   static const toastMaxWidth = 320.0;
   static const toastBottom = 40.0;
   static const toastRise = 12.0;
+
+  static const toastShadows = [
+    BoxShadow(
+      color: AppColors.toastShadow,
+      offset: Offset(0, 12),
+      blurRadius: 24,
+      spreadRadius: -12,
+    ),
+  ];
 
   static const heroShadows = [
     BoxShadow(

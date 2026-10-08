@@ -5,6 +5,11 @@ import 'app_colors.dart';
 abstract final class AppText {
   static const fontFamily = 'Schibsted Grotesk';
   static const normalLineHeight = 1.2;
+  static final roadDot = statusPill.copyWith(
+    fontSize: 13,
+    fontWeight: FontWeight.w800,
+    color: AppColors.surface,
+  );
 
   static const nextStepMark = TextStyle(
     fontFamily: fontFamily,

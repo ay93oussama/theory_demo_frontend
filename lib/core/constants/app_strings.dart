@@ -53,6 +53,17 @@ abstract final class AppStrings {
   static const roadTitle = 'Dein Weg zum Führerschein';
   static const close = 'Schließen';
   static const dismissSheet = 'Ansicht schließen';
+  static const roadCurrent = 'Aktueller Schritt';
+  static const roadLocked = 'Noch gesperrt';
+  static const checkMark = '✓';
+  static String roadStepSemantics(
+    int number,
+    String title,
+    String meta,
+    String status,
+  ) => meta == status
+      ? 'Schritt $number: $title. $status'
+      : 'Schritt $number: $title. $meta. $status';
   static const step1Title = 'Theorieunterricht';
   static const step1Done = 'Abgeschlossen';
   static const step2Title = 'Theorieprüfung';

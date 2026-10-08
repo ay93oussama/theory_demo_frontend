@@ -14,9 +14,13 @@ feedback. An explicit debug-only entry point previews these with local fixtures.
 Task 4 adds the gauge card, custom-painted arc/ticks/needle, and completion copy.
 The gauge animates over 900 ms after an 80 ms delay, transitions color over 400 ms,
 and shows its final state immediately when reduced motion is enabled.
-The default app entry point remains the shell until screen integration. The road
-sheet, booking interaction, loader, Cubit/GetIt wiring, and HTTP integration follow
-in their scheduled tasks. The app does not call the backend yet.
+Task 5 adds the road sheet and completed-state booking button. The sheet slides
+in over 320 ms with a 250 ms scrim fade and supports close, scrim, swipe, and system
+back dismissal. Booking shows one German toast for 2.2 seconds with a 250 ms
+fade/rise; another tap restarts its lifetime. Both honor reduced motion.
+The default app entry point remains the shell until screen integration. The loader,
+Cubit/GetIt wiring, and HTTP integration follow in their scheduled tasks. The app
+does not call the backend yet.
 
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
@@ -48,8 +52,9 @@ flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_
 Scenarios: `progress` (default), `empty`, `partial`, `special-complete`, `complete`,
 `error`, `not-found`. All names/counts in this entry point are frontend fixtures;
 it does not contact the backend and cannot run in release/profile mode. Retry in
-the preview switches back to the progress fixture. Student selection and the road
-sheet are added in their scheduled tasks; their callbacks are tested separately.
+the preview switches back to the progress fixture. Tap the next-step row to open
+the road sheet, including before completion. The complete fixture also provides
+the booking button and toast. Student selection follows in task 7.
 There is no scenario-switching panel in the app.
 
 ## Backend contract and planned configuration
@@ -105,10 +110,13 @@ requirements, excess attendance, invalid section counts, use-case success/failur
 forwarding, German startup copy even on an English device, section labels, name
 taps, error retry, and component layout at 2× text scale. Gauge tests cover German
 completion wording and semantic totals, dynamic requirements, reduced motion,
-animation lifecycle, and disposal during its initial delay. Data/Cubit and booking
-interaction tests follow with their implementations.
+animation lifecycle, and disposal during its initial delay. Interaction tests cover
+sheet statuses/dismissal, booking copy, repeated taps without stacking, toast
+expiry/disposal, and large text with reduced motion. Data/Cubit tests follow in
+task 7.
 Goldens and a dedicated integration suite are deferred. The progress and completed
-gauge previews have been checked on iPhone 17 Pro Max; full-screen comparisons
+gauge previews, road sheet, and booking toast have been checked on iPhone 17 Pro
+Max; full-screen comparisons
 and Android verification are scheduled for task 8.
 
 The final interview handoff in task 9 will expand this README with the completed
