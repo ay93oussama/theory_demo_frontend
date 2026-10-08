@@ -4,6 +4,8 @@ import 'app_colors.dart';
 
 abstract final class AppDimensions {
   static const space2 = 2.0;
+  static const space1 = 1.0;
+  static const space3 = 3.0;
   static const space4 = 4.0;
   static const space6 = 6.0;
   static const space10 = 10.0;
@@ -40,6 +42,26 @@ abstract final class AppDimensions {
   static const bookingHeight = 54.0;
   static const minTapTarget = 48.0;
   static const borderWidth = 1.5;
+  static const thinBorderWidth = 1.0;
+  static const licenceSize = Size(36, 40);
+  static const licencePadding = EdgeInsets.all(2.5);
+  static const headerPadding = EdgeInsets.symmetric(horizontal: 2);
+  static const sectionPillPadding = EdgeInsets.symmetric(
+    horizontal: 10,
+    vertical: 5,
+  );
+  static const nextStepPadding = EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 14,
+  );
+  static const nextStepDotSize = 32.0;
+  static const segmentHeight = 10.0;
+  static const dashLength = 4.0;
+  static const dashGap = 3.0;
+  static const errorHaloSize = 72.0;
+  static const errorIconSize = 40.0;
+  static const errorBodyMaxWidth = 290.0;
+  static const stackTextScale = 1.2;
   static const gaugeSize = Size(280, 158);
   static const engineSize = Size(240, 210);
   static const enginePanelHeight = 228.0;

@@ -36,6 +36,11 @@ abstract final class AppStrings {
   static const sectionBasic = 'Grundstoff';
   static const sectionSpecial = 'Spezialstoff';
   static const attended = 'besucht';
+  static const attendedSuffix = ' besucht';
+  static const errorMark = '!';
+  static const nextStepNumber = '2';
+  static const nextStepArrow = '→';
+  static const chevron = '›';
   static const pillDone = 'Fertig ✓';
   static const nextTitle = 'Als Nächstes: Theorieprüfung';
   static const nextLocked =
@@ -56,6 +61,9 @@ abstract final class AppStrings {
 
   static String studentFallback(String id) => 'Fahrschüler $id';
   static String classBadge(String licenseClass) => 'Klasse $licenseClass';
+  static String studentGreeting(String name) => '$greeting $name';
+  static String sectionSemantics(String title, String count, String status) =>
+      '$title: $count $attended. $status';
   static String totalSuffix(int count) =>
       '/ $count ${count == 1 ? 'Unterricht' : 'Unterrichte'}';
   static String subDone(int count) => count == 1

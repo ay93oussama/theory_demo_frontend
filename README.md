@@ -9,9 +9,11 @@ Task 1 establishes the app shell, German copy catalogue, Material 3 theme and
 design tokens, bundled Schibsted Grotesk fonts, layer structure, and dependencies.
 Task 2 adds framework-free failures, the use-case base, domain entities and
 progress rules, the repository contract, and the progress use case with tests.
-The current screen still displays the title on the specified background. Progress
-widgets, animations, Cubit/GetIt wiring, and HTTP integration follow in the
-scheduled tasks. The app does not call the backend yet.
+Task 3 adds the header/badge, section cards, next-step row, error card, and pressed
+feedback. An explicit debug-only entry point previews these with local fixtures.
+The default app entry point remains the shell until screen integration. Gauge,
+sheet, loader, Cubit/GetIt wiring, and HTTP integration follow in their scheduled
+tasks. The app does not call the backend yet.
 
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
@@ -31,6 +33,20 @@ flutter run -d <simulator-device-id>
 Select the iPhone 17 Pro Max simulator or the Android emulator explicitly.
 Web and desktop are excluded from this project; their untouched starter folders
 do not indicate supported targets.
+
+## Preview the static components
+
+```sh
+flutter run -d <simulator-device-id> -t example/main.dart
+flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=error
+```
+
+Scenarios: `progress` (default), `empty`, `partial`, `special-complete`, `complete`,
+`error`, `not-found`. All names/counts in this entry point are frontend fixtures;
+it does not contact the backend and cannot run in release/profile mode. Retry in
+the preview switches back to the progress fixture. Student selection and the road
+sheet are added in their scheduled tasks; their callbacks are tested separately.
+There is no scenario-switching panel in the app.
 
 ## Backend contract and planned configuration
 
@@ -82,7 +98,8 @@ flutter test
 
 The tests cover the five progress scenarios, API completion precedence, dynamic
 requirements, excess attendance, invalid section counts, use-case success/failure
-forwarding, and German startup copy even on an English device. Data/Cubit tests
+forwarding, German startup copy even on an English device, section labels, name
+taps, error retry, and component layout at 2× text scale. Data/Cubit tests
 and the required complete-state widget test follow with their implementations.
 Goldens and a dedicated integration suite are deferred; simulator screenshot
 comparisons are planned for task 8.

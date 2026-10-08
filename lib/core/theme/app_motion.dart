@@ -4,6 +4,8 @@ abstract final class AppMotion {
   static const emphasized = Cubic(.2, .8, .2, 1);
   static const engineCurve = Curves.easeInOut;
   static const linear = Curves.linear;
+  static const none = Duration.zero;
+  static const press = Duration(milliseconds: 120);
 
   static const toast = Duration(milliseconds: 250);
   static const scrim = Duration(milliseconds: 250);
