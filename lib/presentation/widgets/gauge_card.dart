@@ -78,6 +78,7 @@ class GaugeCard extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.space22),
             Semantics(
+              container: true,
               header: true,
               child: AnimatedDefaultTextStyle(
                 duration: duration,

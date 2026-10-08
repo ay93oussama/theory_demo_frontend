@@ -27,6 +27,9 @@ models, a repository/use case, Cubit, and GetIt. Loading lasts at least 800 ms,
 concurrently with the request. Tap the student name to switch demo students;
 pull down or tap the update timestamp to refresh. A 404 has separate German copy.
 Requests for an older selection cannot overwrite the current student.
+Task 8 verifies the app on both target simulators and improves screen-reader
+grouping: headings, explanatory copy, and retry remain separate, and errors use
+a live region. The approved visual layout is preserved.
 
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
@@ -151,11 +154,9 @@ failure conversion, and malformed data. Cubit tests cover the 800 ms minimum,
 slow responses, retry, cached names, timestamps, stale selection results, and
 closure. Screen tests exercise German progress/completion/zero states, selector,
 booking, retry, timestamp refresh, and pull-to-refresh using a fake repository.
-Goldens and a dedicated integration suite are deferred. The progress and completed
-gauge previews, road sheet, booking toast, and engine loader have been checked on
-iPhone 17 Pro Max. The default entry point also runs against the real backend on
-that simulator. Android verification and final visual polish are scheduled for
-task 8.
+Goldens and a dedicated integration suite are deferred. Both target simulators
+run against the real backend. See [the verification record](docs/verification.md)
+for the states, accessibility checks, and limits of the manual device coverage.
 
 The final interview handoff in task 9 will expand this README with the completed
 architecture diagram, state screenshots/GIFs, verified platform commands,

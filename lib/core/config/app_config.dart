@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 final class AppConfig {
-  const AppConfig({required this.apiBaseUrl, this.studentId = '1', this.demoMode = false});
+  const AppConfig({
+    required this.apiBaseUrl,
+    this.studentId = '1',
+    this.demoMode = false,
+  });
 
   factory AppConfig.fromEnvironment() {
     const override = String.fromEnvironment('API_BASE_URL');
@@ -11,7 +15,11 @@ final class AppConfig {
         ? 'http://10.0.2.2:8080'
         : 'http://localhost:8080';
     final uri = Uri.tryParse(baseUrl);
-    if (uri == null || !uri.hasAuthority || !['http', 'https'].contains(uri.scheme) || uri.hasQuery || uri.hasFragment) {
+    if (uri == null ||
+        !uri.hasAuthority ||
+        !['http', 'https'].contains(uri.scheme) ||
+        uri.hasQuery ||
+        uri.hasFragment) {
       throw const FormatException('API_BASE_URL must be an HTTP(S) base URL.');
     }
     const studentId = String.fromEnvironment('STUDENT_ID', defaultValue: '1');
@@ -21,7 +29,10 @@ final class AppConfig {
     return AppConfig(
       apiBaseUrl: baseUrl.replaceFirst(RegExp(r'/+$'), ''),
       studentId: studentId.trim(),
-      demoMode: const bool.fromEnvironment('DEMO_MODE', defaultValue: kDebugMode),
+      demoMode: const bool.fromEnvironment(
+        'DEMO_MODE',
+        defaultValue: kDebugMode,
+      ),
     );
   }
 

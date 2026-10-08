@@ -53,6 +53,7 @@ class ErrorCard extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.space18),
             Semantics(
+              container: true,
               header: true,
               child: Text(
                 AppStrings.errorTitle,
@@ -65,10 +66,14 @@ class ErrorCard extends StatelessWidget {
               constraints: const BoxConstraints(
                 maxWidth: AppDimensions.errorBodyMaxWidth,
               ),
-              child: Text(
-                message,
-                style: AppText.errorBody,
-                textAlign: TextAlign.center,
+              child: Semantics(
+                container: true,
+                liveRegion: true,
+                child: Text(
+                  message,
+                  style: AppText.errorBody,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             const SizedBox(height: AppDimensions.space20),

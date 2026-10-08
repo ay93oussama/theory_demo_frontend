@@ -192,7 +192,11 @@ class _LoadedProgress extends StatelessWidget {
         children: [
           for (var index = 0; index < children.length; index++) ...[
             if (index > 0) const SizedBox(height: AppDimensions.space16),
-            Semantics(container: true, child: children[index]),
+            Semantics(
+              container: true,
+              explicitChildNodes: true,
+              child: children[index],
+            ),
           ],
         ],
       ),

@@ -112,6 +112,9 @@ void main() {
       find.text('Dieser Fahrschüler wurde nicht gefunden.'),
       findsOneWidget,
     );
+    expect(find.bySemanticsLabel(AppStrings.errorTitle), findsOneWidget);
+    expect(find.bySemanticsLabel(AppStrings.errorNotFound), findsOneWidget);
+    expect(find.bySemanticsLabel(AppStrings.retry), findsOneWidget);
     await tester.ensureVisible(find.text('Erneut versuchen'));
     await tester.tap(find.text('Erneut versuchen'));
     await tester.pumpAndSettle();

@@ -13,9 +13,14 @@ final getIt = GetIt.instance;
 
 void configureDependencies(AppConfig config) {
   getIt.registerSingleton<AppConfig>(config);
-  getIt.registerLazySingleton<Dio>(() => createDio(getIt()), dispose: (dio) => dio.close());
+  getIt.registerLazySingleton<Dio>(
+    () => createDio(getIt()),
+    dispose: (dio) => dio.close(),
+  );
   getIt.registerLazySingleton(() => TheoryProgressRemoteDataSource(getIt()));
-  getIt.registerLazySingleton<TheoryProgressRepository>(() => TheoryProgressRepositoryImpl(getIt()));
+  getIt.registerLazySingleton<TheoryProgressRepository>(
+    () => TheoryProgressRepositoryImpl(getIt()),
+  );
   getIt.registerLazySingleton(() => GetTheoryProgressUseCase(getIt()));
   getIt.registerFactory(() => TheoryProgressCubit(getIt(), config: getIt()));
 }
