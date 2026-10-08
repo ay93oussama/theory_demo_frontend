@@ -7,7 +7,9 @@ task. The targets are iPhone 17 Pro Max and an Android simulator.
 
 Task 1 establishes the app shell, German copy catalogue, Material 3 theme and
 design tokens, bundled Schibsted Grotesk fonts, layer structure, and dependencies.
-The current screen displays the title on the specified background. Progress
+Task 2 adds framework-free failures, the use-case base, domain entities and
+progress rules, the repository contract, and the progress use case with tests.
+The current screen still displays the title on the specified background. Progress
 widgets, animations, Cubit/GetIt wiring, and HTTP integration follow in the
 scheduled tasks. The app does not call the backend yet.
 
@@ -78,11 +80,12 @@ flutter analyze
 flutter test
 ```
 
-There is currently one startup widget test proving German copy is rendered even
-on an English device. Add focused domain/data/Cubit tests and the required
-complete-state widget test alongside those implementations. Goldens and a
-dedicated integration suite are deferred; simulator screenshot comparisons are
-planned for task 8.
+The tests cover the five progress scenarios, API completion precedence, dynamic
+requirements, excess attendance, invalid section counts, use-case success/failure
+forwarding, and German startup copy even on an English device. Data/Cubit tests
+and the required complete-state widget test follow with their implementations.
+Goldens and a dedicated integration suite are deferred; simulator screenshot
+comparisons are planned for task 8.
 
 The final interview handoff in task 9 will expand this README with the completed
 architecture diagram, state screenshots/GIFs, verified platform commands,

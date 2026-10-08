@@ -122,8 +122,8 @@ test/
   failures. Models have handwritten `fromJson`, `toJson`, and `toEntity` methods.
   Return domain entities from repository contracts, not data models.
 - `core/usecases/use_case.dart` imports dartz, equatable, and
-  `../errors/app_failure.dart`. Its `UseCase<Type, Params>` declares
-  `Future<Either<AppFailure, Type>> call(Params params)`. Include equatable
+  `../errors/app_failure.dart`. Its `UseCase<Result, Params>` declares
+  `Future<Either<AppFailure, Result>> call(Params params)`. Include equatable
   `NoParams` with empty props.
 - `GetTheoryProgressUseCase` depends on the repository interface and receives
   `GetTheoryProgressParams(studentId: ...)`, an equatable parameter object.
