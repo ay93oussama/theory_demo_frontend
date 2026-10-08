@@ -22,6 +22,7 @@ abstract final class AppMotion {
   static const gauge = Duration(milliseconds: 900);
   static const gaugeDelay = Duration(milliseconds: 80);
   static const minimumLoading = Duration(milliseconds: 800);
+  static const timestampInterval = Duration(minutes: 1);
   static const engineCycle = Duration(milliseconds: 1200);
   static const spinnerCycle = Duration(milliseconds: 900);
   static const rpmCycle = Duration(milliseconds: 2400);
