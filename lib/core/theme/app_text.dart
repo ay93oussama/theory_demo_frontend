@@ -5,6 +5,11 @@ import 'app_colors.dart';
 abstract final class AppText {
   static const fontFamily = 'Schibsted Grotesk';
   static const normalLineHeight = 1.2;
+  static final loaderPill = statusPill.copyWith(color: AppColors.primaryInk);
+  static final loaderCheck = statusPill.copyWith(
+    color: AppColors.surface,
+    fontWeight: FontWeight.w800,
+  );
   static final roadDot = statusPill.copyWith(
     fontSize: 13,
     fontWeight: FontWeight.w800,
@@ -88,7 +93,7 @@ abstract final class AppText {
     fontSize: 21,
     fontWeight: FontWeight.w800,
     color: AppColors.ink,
-    letterSpacing: 0,
+    letterSpacing: -.21,
     height: normalLineHeight,
   );
   static const countSuffix = TextStyle(

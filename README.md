@@ -18,9 +18,13 @@ Task 5 adds the road sheet and completed-state booking button. The sheet slides
 in over 320 ms with a 250 ms scrim fade and supports close, scrim, swipe, and system
 back dismissal. Booking shows one German toast for 2.2 seconds with a 250 ms
 fade/rise; another tap restarts its lifetime. Both honor reduced motion.
-The default app entry point remains the shell until screen integration. The loader,
-Cubit/GetIt wiring, and HTTP integration follow in their scheduled tasks. The app
-does not call the backend yet.
+Task 6 adds the supplied engine PNG assembly, alternating pistons, sparks and
+rotating pulley (1.2 s), RPM bar (2.4 s), checklist spinner (900 ms), skeleton
+pulse (1.4 s), and loading fade (300 ms). Reduced motion shows a static loading
+view. Controllers stop when the view is removed; the image children are reused.
+The default app entry point remains the shell until screen integration. Cubit/GetIt
+wiring and HTTP integration follow in task 7, including the 800 ms minimum loading
+time. The app does not call the backend yet.
 
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
@@ -47,10 +51,12 @@ do not indicate supported targets.
 flutter run -d <simulator-device-id> -t example/main.dart
 flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=complete
 flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=error
+flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=loading
 ```
 
 Scenarios: `progress` (default), `empty`, `partial`, `special-complete`, `complete`,
-`error`, `not-found`. All names/counts in this entry point are frontend fixtures;
+`error`, `not-found`, `loading`. The loading preview stays visible for inspection.
+All names/counts in this entry point are frontend fixtures;
 it does not contact the backend and cannot run in release/profile mode. Retry in
 the preview switches back to the progress fixture. Tap the next-step row to open
 the road sheet, including before completion. The complete fixture also provides
@@ -96,6 +102,8 @@ The domain and shared failure types have no Flutter or Dio dependencies.
 Packages: `flutter_bloc`, `equatable`, `dio`, `dartz`, and `get_it`.
 German strings use `AppStrings`; there is no localization or code generation.
 Fonts are bundled for offline use with their [licence](assets/fonts/OFL.txt).
+The engine uses the six supplied PNG parts in `assets/engine/`, with their 2× and
+3× variants; it needs no animation package or network access.
 
 ## Checks
 
@@ -112,11 +120,12 @@ taps, error retry, and component layout at 2× text scale. Gauge tests cover Ger
 completion wording and semantic totals, dynamic requirements, reduced motion,
 animation lifecycle, and disposal during its initial delay. Interaction tests cover
 sheet statuses/dismissal, booking copy, repeated taps without stacking, toast
-expiry/disposal, and large text with reduced motion. Data/Cubit tests follow in
-task 7.
+expiry/disposal, and large text with reduced motion. Two loading tests cover German
+copy/semantics, animation disposal, changing reduced-motion preferences, and 2×
+text. Data/Cubit tests follow in task 7.
 Goldens and a dedicated integration suite are deferred. The progress and completed
-gauge previews, road sheet, and booking toast have been checked on iPhone 17 Pro
-Max; full-screen comparisons
+gauge previews, road sheet, booking toast, and engine loader have been checked on
+iPhone 17 Pro Max; full-screen comparisons
 and Android verification are scheduled for task 8.
 
 The final interview handoff in task 9 will expand this README with the completed

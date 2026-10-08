@@ -4,6 +4,7 @@ abstract final class AppMotion {
   static const emphasized = Cubic(.2, .8, .2, 1);
   static const engineCurve = Curves.easeInOut;
   static const linear = Curves.linear;
+  static const loadingCurve = Curves.ease;
   static const none = Duration.zero;
   static const press = Duration(milliseconds: 120);
 
@@ -30,4 +31,26 @@ abstract final class AppMotion {
   static const retryPressedScale = .97;
   static const actionPressedScale = .98;
   static const skeletonMinOpacity = .45;
+  static const engineTiltDegrees = 34.0;
+  static const pistonTravel = 56.0;
+  static const sparkStart = .8;
+  static const sparkPeak = .88;
+  static const sparkMinScale = .6;
+  static const sparkMaxScale = 1.4;
+
+  static final rpm = TweenSequence<double>([
+    TweenSequenceItem(tween: _engineTween(.1, .85), weight: 45),
+    TweenSequenceItem(tween: _engineTween(.85, .28), weight: 25),
+    TweenSequenceItem(tween: _engineTween(.28, .32), weight: 30),
+  ]);
+  static final skeletonOpacity = TweenSequence<double>([
+    TweenSequenceItem(tween: _engineTween(1, skeletonMinOpacity), weight: 50),
+    TweenSequenceItem(tween: _engineTween(skeletonMinOpacity, 1), weight: 50),
+  ]);
+
+  static Animatable<double> _engineTween(double begin, double end) =>
+      Tween<double>(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: engineCurve));
 }

@@ -14,6 +14,7 @@ import 'package:theory_demo_frontend/presentation/widgets/gauge_card.dart';
 import 'package:theory_demo_frontend/presentation/widgets/next_step_row.dart';
 import 'package:theory_demo_frontend/presentation/widgets/progress_header.dart';
 import 'package:theory_demo_frontend/presentation/widgets/section_card.dart';
+import 'package:theory_demo_frontend/presentation/widgets/theory_progress_loading.dart';
 
 void main() {
   if (!kDebugMode) {
@@ -45,7 +46,9 @@ class _ComponentPreviewState extends State<_ComponentPreview> {
         studentName: _progress.studentName,
         licenseClass: _progress.licenseClass,
       ),
-      if (_showError)
+      if (_scenario == 'loading')
+        const TheoryProgressLoading()
+      else if (_showError)
         ErrorCard(
           message: _scenario == 'not-found'
               ? AppStrings.errorNotFound
