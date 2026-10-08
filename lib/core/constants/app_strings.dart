@@ -23,6 +23,8 @@ abstract final class AppStrings {
   static const pillInProgress = 'In Arbeit';
   static const pillComplete = 'Erledigt';
   static const headlineDone = 'Theorie erledigt ✓';
+  static const gaugeCompleteNextStep =
+      'Du kannst jetzt deine Theorieprüfung buchen.';
   static const headlineEmpty = "Los geht's";
   static const subEmpty =
       'Besuche deinen ersten Theorieunterricht, um die Anzeige zu füllen.';
@@ -41,7 +43,7 @@ abstract final class AppStrings {
   static const nextStepNumber = '2';
   static const nextStepArrow = '→';
   static const chevron = '›';
-  static const pillDone = 'Fertig ✓';
+  static const pillDone = 'Alles besucht';
   static const nextTitle = 'Als Nächstes: Theorieprüfung';
   static const nextLocked =
       'Wird freigeschaltet, sobald die Theorie erledigt ist';
@@ -66,9 +68,11 @@ abstract final class AppStrings {
       '$title: $count $attended. $status';
   static String totalSuffix(int count) =>
       '/ $count ${count == 1 ? 'Unterricht' : 'Unterrichte'}';
+  static String gaugeSemantics(int attended, int required, String status) =>
+      '$heroLabel: $attended von $required Unterrichten besucht. $status';
   static String subDone(int count) => count == 1
-      ? 'Der erforderliche Unterricht wurde besucht. Du kannst jetzt deine Theorieprüfung buchen.'
-      : 'Alle $count Unterrichte besucht. Du kannst jetzt deine Theorieprüfung buchen.';
+      ? 'Der erforderliche Unterricht wurde besucht. Gut gemacht!'
+      : 'Alle $count Unterrichte besucht. Gut gemacht!';
   static String headlineSpecialLeft(int count) =>
       'Noch $count ${count == 1 ? 'Spezialstoffthema' : 'Spezialstoffthemen'}';
   static String headlineBasicLeft(int count) =>

@@ -22,12 +22,18 @@ class ClassBadge extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppDimensions.radius7),
-            border: Border.all(color: AppColors.licenceBorder, width: AppDimensions.thinBorderWidth),
+            border: Border.all(
+              color: AppColors.licenceBorder,
+              width: AppDimensions.thinBorderWidth,
+            ),
           ),
           child: Padding(
             padding: AppDimensions.licencePadding,
             child: DecoratedBox(
-              decoration: BoxDecoration(color: AppColors.licenceBlue, borderRadius: BorderRadius.circular(AppDimensions.radius5)),
+              decoration: BoxDecoration(
+                color: AppColors.licenceBlue,
+                borderRadius: BorderRadius.circular(AppDimensions.radius5),
+              ),
               child: Center(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,

@@ -54,6 +54,22 @@ abstract final class AppText {
     color: AppColors.ink,
     height: normalLineHeight,
   );
+  static final gaugeHeadline = headline.copyWith(
+    fontSize: 25,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -.5,
+    height: 1.18,
+  );
+  static final gaugeLabel = label.copyWith(fontWeight: FontWeight.w500);
+  static final gaugeBody = body.copyWith(fontSize: 14, height: 1.5);
+  static final gaugeCountSuffix = countSuffix.copyWith(
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+  );
+  static final gaugeFootnote = meta.copyWith(
+    color: AppColors.textMuted,
+    height: 1.5,
+  );
   static const sheetTitle = TextStyle(
     fontFamily: fontFamily,
     fontSize: 21,
@@ -93,6 +109,22 @@ abstract final class AppText {
     color: AppColors.ink,
     letterSpacing: 0,
     height: normalLineHeight,
+  );
+  static final sectionHeading = sectionTitle.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    letterSpacing: -.1,
+    height: 1.4,
+  );
+  static final sectionAttendance = sectionCount.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.45,
+  );
+  static final sectionVisited = attended.copyWith(fontSize: 13, height: 1.45);
+  static final sectionStatus = sectionPill.copyWith(
+    fontWeight: FontWeight.w500,
+    height: 1.4,
   );
   static const button = TextStyle(
     fontFamily: fontFamily,

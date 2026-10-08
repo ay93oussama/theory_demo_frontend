@@ -33,41 +33,53 @@ void main() {
 
     expect(find.text('8 von 12 besucht'), findsOneWidget);
     expect(find.text('1 von 2 besucht'), findsOneWidget);
-    expect(find.text('Fertig ✓'), findsNothing);
+    expect(find.text('Alles besucht'), findsNothing);
+    expect(find.byIcon(Icons.check_rounded), findsNothing);
     expect(
       find.bySemanticsLabel('Grundstoff: 8 von 12 besucht. Noch 4'),
       findsOneWidget,
     );
   });
 
-  testWidgets('zero and done cards remain readable at large text scale', (
-    tester,
-  ) async {
-    await _pump(tester, [
-      SectionCard(
-        title: AppStrings.sectionBasic,
-        attendedLabel: AppStrings.attendedOf(12, 12),
-        statusLabel: AppStrings.pillDone,
-        requiredCount: 12,
-        filledCount: 12,
-        isComplete: true,
-      ),
-      SectionCard(
-        title: AppStrings.sectionSpecial,
-        attendedLabel: AppStrings.attendedOf(0, 2),
-        statusLabel: AppStrings.pillNotStarted,
-        requiredCount: 2,
-        filledCount: 0,
-        isComplete: false,
-      ),
-    ], textScale: 2);
+  testWidgets(
+    'zero and done cards reflow on narrow screens at large text scale',
+    (tester) async {
+      await _pump(
+        tester,
+        [
+          SectionCard(
+            title: AppStrings.sectionBasic,
+            attendedLabel: AppStrings.attendedOf(12, 12),
+            statusLabel: AppStrings.pillDone,
+            requiredCount: 12,
+            filledCount: 12,
+            isComplete: true,
+          ),
+          SectionCard(
+            title: AppStrings.sectionSpecial,
+            attendedLabel: AppStrings.attendedOf(0, 2),
+            statusLabel: AppStrings.pillNotStarted,
+            requiredCount: 2,
+            filledCount: 0,
+            isComplete: false,
+          ),
+        ],
+        textScale: 2,
+        width: 320,
+      );
 
-    expect(find.text('12 von 12 besucht'), findsOneWidget);
-    expect(find.text('0 von 2 besucht'), findsOneWidget);
-    expect(find.text('Fertig ✓'), findsOneWidget);
-    expect(find.text('Nicht begonnen'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.text('12 von 12 besucht'), findsOneWidget);
+      expect(find.text('0 von 2 besucht'), findsOneWidget);
+      expect(find.text('Alles besucht'), findsOneWidget);
+      expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Grundstoff: 12 von 12 besucht. Alles besucht'),
+        findsOneWidget,
+      );
+      expect(find.text('Nicht begonnen'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'student name taps invoke selection and badge has German semantics',
@@ -127,8 +139,9 @@ Future<void> _pump(
   WidgetTester tester,
   List<Widget> children, {
   double textScale = 1,
+  double width = 390,
 }) async {
-  tester.view.physicalSize = const Size(390, 844);
+  tester.view.physicalSize = Size(width, 844);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);

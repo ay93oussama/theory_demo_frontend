@@ -31,41 +31,42 @@ class SectionCard extends StatelessWidget {
     final duration = MediaQuery.disableAnimationsOf(context)
         ? AppMotion.none
         : AppMotion.color;
-    final details = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final textScaler = MediaQuery.textScalerOf(context);
+    final stackHeader =
+        textScaler.scale(AppText.sectionHeading.fontSize!) >
+        AppText.sectionHeading.fontSize! * AppDimensions.stackTextScale;
+    final heading = Text(title, style: AppText.sectionHeading);
+    final status = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(title, style: AppText.sectionTitle),
-        const SizedBox(height: AppDimensions.space3),
-        Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(text: attendedLabel, style: AppText.sectionCount),
-              const TextSpan(
-                text: AppStrings.attendedSuffix,
-                style: AppText.attended,
-              ),
-            ],
+        if (isComplete) ...[
+          Container(
+            width: textScaler.scale(AppDimensions.sectionDoneSize),
+            height: textScaler.scale(AppDimensions.sectionDoneSize),
+            decoration: const BoxDecoration(
+              color: AppColors.success,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.check_rounded,
+              size: textScaler.scale(AppDimensions.sectionDoneCheckSize),
+              color: AppColors.surface,
+            ),
+          ),
+          const SizedBox(width: AppDimensions.space6),
+        ],
+        Flexible(
+          child: AnimatedDefaultTextStyle(
+            duration: duration,
+            style: AppText.sectionStatus.copyWith(
+              color: isComplete ? AppColors.successInk : AppColors.primaryInk,
+            ),
+            child: Text(statusLabel, textAlign: TextAlign.right),
           ),
         ),
       ],
     );
-    final pill = AnimatedContainer(
-      duration: duration,
-      padding: AppDimensions.sectionPillPadding,
-      decoration: BoxDecoration(
-        color: isComplete ? AppColors.successTint : AppColors.primaryTint,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
-      ),
-      child: Text(
-        statusLabel,
-        style: AppText.sectionPill.copyWith(
-          color: isComplete ? AppColors.successInk : AppColors.primaryInk,
-        ),
-      ),
-    );
-    final stackHeader =
-        MediaQuery.textScalerOf(context).scale(AppText.sectionTitle.fontSize!) >
-        AppText.sectionTitle.fontSize! * AppDimensions.stackTextScale;
 
     return Semantics(
       label: AppStrings.sectionSemantics(title, attendedLabel, statusLabel),
@@ -77,7 +78,7 @@ class SectionCard extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppDimensions.radius22),
           border: Border.all(
-            color: isComplete ? AppColors.successBorder : AppColors.border,
+            color: AppColors.border,
             width: AppDimensions.borderWidth,
           ),
         ),
@@ -88,43 +89,67 @@ class SectionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  details,
-                  const SizedBox(height: AppDimensions.space12),
-                  pill,
+                  heading,
+                  const SizedBox(height: AppDimensions.space6),
+                  Align(alignment: Alignment.centerRight, child: status),
                 ],
               )
             else
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: details),
+                  Expanded(child: heading),
                   const SizedBox(width: AppDimensions.space12),
-                  pill,
+                  Flexible(child: status),
                 ],
               ),
-            const SizedBox(height: AppDimensions.space12),
-            Row(
-              children: [
-                for (var index = 0; index < requiredCount; index++) ...[
-                  if (index > 0) const SizedBox(width: AppDimensions.space4),
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: duration,
-                      height: AppDimensions.segmentHeight,
-                      decoration: BoxDecoration(
-                        color: index < filledCount
-                            ? (isComplete
-                                  ? AppColors.success
-                                  : AppColors.primary)
-                            : AppColors.track,
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.radius5,
+            const SizedBox(height: AppDimensions.space6),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: attendedLabel,
+                    style: AppText.sectionAttendance,
+                  ),
+                  TextSpan(
+                    text: AppStrings.attendedSuffix,
+                    style: AppText.sectionVisited,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppDimensions.space16),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth:
+                    requiredCount * AppDimensions.segmentMaxWidth +
+                    (requiredCount - 1) * AppDimensions.segmentGap,
+              ),
+              child: Row(
+                children: [
+                  for (var index = 0; index < requiredCount; index++) ...[
+                    if (index > 0)
+                      const SizedBox(width: AppDimensions.segmentGap),
+                    Expanded(
+                      child: AnimatedContainer(
+                        duration: duration,
+                        height: AppDimensions.segmentHeight,
+                        decoration: BoxDecoration(
+                          color: index < filledCount
+                              ? (isComplete
+                                    ? AppColors.success
+                                    : AppColors.primary)
+                              : AppColors.track,
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.radiusPill,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ],
         ),

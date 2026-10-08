@@ -11,9 +11,12 @@ Task 2 adds framework-free failures, the use-case base, domain entities and
 progress rules, the repository contract, and the progress use case with tests.
 Task 3 adds the header/badge, section cards, next-step row, error card, and pressed
 feedback. An explicit debug-only entry point previews these with local fixtures.
-The default app entry point remains the shell until screen integration. Gauge,
-sheet, loader, Cubit/GetIt wiring, and HTTP integration follow in their scheduled
-tasks. The app does not call the backend yet.
+Task 4 adds the gauge card, custom-painted arc/ticks/needle, and completion copy.
+The gauge animates over 900 ms after an 80 ms delay, transitions color over 400 ms,
+and shows its final state immediately when reduced motion is enabled.
+The default app entry point remains the shell until screen integration. The road
+sheet, booking interaction, loader, Cubit/GetIt wiring, and HTTP integration follow
+in their scheduled tasks. The app does not call the backend yet.
 
 See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
 criteria, references, and the full task sequence. Each task is reviewed before
@@ -34,10 +37,11 @@ Select the iPhone 17 Pro Max simulator or the Android emulator explicitly.
 Web and desktop are excluded from this project; their untouched starter folders
 do not indicate supported targets.
 
-## Preview the static components
+## Preview the components
 
 ```sh
 flutter run -d <simulator-device-id> -t example/main.dart
+flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=complete
 flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=error
 ```
 
@@ -91,7 +95,7 @@ Fonts are bundled for offline use with their [licence](assets/fonts/OFL.txt).
 ## Checks
 
 ```sh
-dart format --output=none --set-exit-if-changed lib test
+dart format --output=none --set-exit-if-changed lib example test
 flutter analyze
 flutter test
 ```
@@ -99,10 +103,13 @@ flutter test
 The tests cover the five progress scenarios, API completion precedence, dynamic
 requirements, excess attendance, invalid section counts, use-case success/failure
 forwarding, German startup copy even on an English device, section labels, name
-taps, error retry, and component layout at 2× text scale. Data/Cubit tests
-and the required complete-state widget test follow with their implementations.
-Goldens and a dedicated integration suite are deferred; simulator screenshot
-comparisons are planned for task 8.
+taps, error retry, and component layout at 2× text scale. Gauge tests cover German
+completion wording and semantic totals, dynamic requirements, reduced motion,
+animation lifecycle, and disposal during its initial delay. Data/Cubit and booking
+interaction tests follow with their implementations.
+Goldens and a dedicated integration suite are deferred. The progress and completed
+gauge previews have been checked on iPhone 17 Pro Max; full-screen comparisons
+and Android verification are scheduled for task 8.
 
 The final interview handoff in task 9 will expand this README with the completed
 architecture diagram, state screenshots/GIFs, verified platform commands,

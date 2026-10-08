@@ -28,6 +28,7 @@ abstract final class AppColors {
   static const licenceBorder = Color(0xFFC3CAD4);
   static const spinnerTrack = Color(0xFFDCE3F2);
   static const heroShadow = Color(0x7316181D);
+  static const gaugeShadow = Color(0x4516181D);
   static const sheetScrim = Color(0x6116181D);
   static const gaugeTicks = Color(0x4716181D);
   static const transparent = Color(0x00000000);
