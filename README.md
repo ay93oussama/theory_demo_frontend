@@ -1,0 +1,89 @@
+# Theory Progress
+
+A German Flutter app for Class B theory attendance, built as a frontend interview
+task. The targets are iPhone 17 Pro Max and an Android simulator.
+
+## Current milestone
+
+Task 1 establishes the app shell, German copy catalogue, Material 3 theme and
+design tokens, bundled Schibsted Grotesk fonts, layer structure, and dependencies.
+The current screen displays the title on the specified background. Progress
+widgets, animations, Cubit/GetIt wiring, and HTTP integration follow in the
+scheduled tasks. The app does not call the backend yet.
+
+See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
+criteria, references, and the full task sequence. Each task is reviewed before
+its commit; work on the next task starts only after the user's instruction.
+
+## Run the current shell
+
+Toolchain used for this milestone: Flutter 3.35.4 stable / Dart 3.9.2.
+Use Xcode and an iOS simulator on macOS, or an Android SDK/emulator installation.
+
+```sh
+flutter pub get
+flutter devices
+flutter run -d <simulator-device-id>
+```
+
+Select the iPhone 17 Pro Max simulator or the Android emulator explicitly.
+Web and desktop are excluded from this project; their untouched starter folders
+do not indicate supported targets.
+
+## Backend contract and planned configuration
+
+The existing Spring Boot backend is separate and is not modified by this app.
+From its directory, using JDK 25:
+
+```sh
+./gradlew bootRun
+```
+
+The endpoint is `GET /api/students/{id}/theory-progress` on port **8080**.
+It returns `studentId`, `studentName`, `licenseClass`, `basicTopics`,
+`specialTopics`, and `completed`. Each topic section has `attended` and `required`.
+Unknown students return HTTP 404 with a body such as
+`{"message":"Student '999' not found"}`.
+
+| Runtime | Default API base URL (task 7) |
+| --- | --- |
+| iOS simulator | `http://localhost:8080` |
+| Android emulator | `http://10.0.2.2:8080` |
+
+Task 7 will add `--dart-define=API_BASE_URL=...` and
+`--dart-define=STUDENT_ID=...` (default `1`), emulator HTTP configuration, and the
+student-name tap selector. These defines are not consumed by the shell yet.
+
+## Architecture
+
+- `core`: shared configuration, failures, use-case base, DI, tokens, and strings.
+- `data`: Dio data sources, handwritten JSON models, repository implementations.
+- `domain`: immutable entities, progress rules, repository interfaces, use cases.
+- `presentation`: Cubit states, the screen, and rendering/interaction widgets.
+
+The planned data flow is screen → Cubit → use case → repository → data source.
+Repositories return `Either<AppFailure, TheoryProgress>`; Cubit uses `fold`.
+GetIt constructs dependencies; classes receive them through constructors.
+The domain and shared failure types have no Flutter or Dio dependencies.
+
+Packages: `flutter_bloc`, `equatable`, `dio`, `dartz`, and `get_it`.
+German strings use `AppStrings`; there is no localization or code generation.
+Fonts are bundled for offline use with their [licence](assets/fonts/OFL.txt).
+
+## Checks
+
+```sh
+dart format --output=none --set-exit-if-changed lib test
+flutter analyze
+flutter test
+```
+
+There is currently one startup widget test proving German copy is rendered even
+on an English device. Add focused domain/data/Cubit tests and the required
+complete-state widget test alongside those implementations. Goldens and a
+dedicated integration suite are deferred; simulator screenshot comparisons are
+planned for task 8.
+
+The final interview handoff in task 9 will expand this README with the completed
+architecture diagram, state screenshots/GIFs, verified platform commands,
+decisions, trade-offs, and next steps.
