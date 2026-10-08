@@ -4,6 +4,7 @@ abstract final class AppStrings {
   static const greeting = 'Guten Morgen,';
   static const selectStudent = 'Fahrschüler auswählen';
   static const switchStudent = 'Fahrschüler wechseln';
+  static const dismissStudentMenu = 'Fahrschülerauswahl schließen';
   static const loadingStudentNames = 'Namen werden geladen…';
   static String demoStudentId(String id) => 'Fahrschüler-ID: $id';
   static const loaderLabel = 'Motorstart';

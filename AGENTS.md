@@ -99,7 +99,7 @@ lib/
     cubits/theory_progress/
                      theory_progress_cubit.dart, theory_progress_state.dart
     screens/         theory_progress_screen.dart
-    widgets/         demo_student_sheet.dart and the progress UI components
+    widgets/         demo_student_menu.dart and the progress UI components
 assets/
   fonts/
   engine/            PNGs plus 2.0x/ and 3.0x/ variants (task 6)
@@ -174,11 +174,13 @@ test/
 
 ## Demo selection
 
-- A **normal tap on the student name** opens
-  `presentation/widgets/demo_student_sheet.dart` in demo mode.
+- A **normal tap on the student name** opens the anchored
+  `presentation/widgets/demo_student_menu.dart` popup in demo mode. Show a
+  chevron beside the name and list only the other students, with their initials.
+  This replaces the former student-selection bottom sheet.
 - Keep the Class B badge visual-only. Do not add a long-press requirement.
 - Demo configuration stores IDs `1`, `2`, `3` only. Load/cache missing names using
-  the existing endpoint when the sheet opens. Selection fetches fresh progress.
+  the existing endpoint when the menu opens. Selection fetches fresh progress.
 - Use `Fahrschüler {id}` until a name is available, including failed name lookups.
   A failed selector lookup must not prevent selecting another student.
 - Current backend examples: ID 1 Tom (8/12, 1/2), ID 2 Julian (0/12, 0/2),

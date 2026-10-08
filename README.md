@@ -27,6 +27,14 @@ models, a repository/use case, Cubit, and GetIt. Loading lasts at least 800 ms,
 concurrently with the request. Tap the student name to switch demo students;
 pull down or tap the update timestamp to refresh. A 404 has separate German copy.
 Requests for an older selection cannot overwrite the current student.
+The name now has a chevron and opens an anchored popup showing the other students
+with their initials. It replaces the student-selection bottom sheet and dismisses
+on selection, outside tap, or system back. The popup respects reduced motion and
+larger text. Name lookup, caching, and fresh selection requests use the existing
+Cubit. Opening and selection were checked against the API on iPhone 17 Pro Max;
+the updated app also built and launched on the Android emulator. Widget tests
+cover placement, dismissal, failed name lookup, and 2× text.
+See the [student popup](docs/screenshots/student-menu/iphone-popup.png).
 Task 8 verifies the app on both target simulators and improves screen-reader
 grouping: headings, explanatory copy, and retry remain separate, and errors use
 a live region. The approved visual layout is preserved.

@@ -10,7 +10,7 @@ import '../cubits/theory_progress/theory_progress_cubit.dart';
 import '../cubits/theory_progress/theory_progress_state.dart';
 import '../widgets/app_modal_sheet.dart';
 import '../widgets/book_exam_button.dart';
-import '../widgets/demo_student_sheet.dart';
+import '../widgets/demo_student_menu.dart';
 import '../widgets/error_card.dart';
 import '../widgets/gauge_card.dart';
 import '../widgets/next_step_row.dart';
@@ -29,6 +29,9 @@ class TheoryProgressScreen extends StatefulWidget {
 
 class _TheoryProgressScreenState extends State<TheoryProgressScreen>
     with WidgetsBindingObserver {
+  final _studentNameAnchor = GlobalKey();
+  bool _studentMenuOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +69,8 @@ class _TheoryProgressScreenState extends State<TheoryProgressScreen>
               padding: AppDimensions.screenPadding,
               children: [
                 ProgressHeader(
+                  studentNameAnchor: _studentNameAnchor,
+                  studentMenuOpen: _studentMenuOpen,
                   studentName: state.studentName,
                   licenseClass: state.licenseClass,
                   onStudentTap: cubit.demoMode
@@ -92,20 +97,19 @@ class _TheoryProgressScreenState extends State<TheoryProgressScreen>
     ),
   );
 
-  void _showStudents(TheoryProgressCubit cubit) {
-    final students = cubit.loadDemoStudents();
-    showAppModalSheet(
+  Future<void> _showStudents(TheoryProgressCubit cubit) async {
+    if (_studentMenuOpen) return;
+    setState(() => _studentMenuOpen = true);
+    final selectedId = await showDemoStudentMenu(
       context: context,
-      builder: (sheetContext) => DemoStudentSheet(
-        initialStudents: cubit.demoStudents,
-        students: students,
-        selectedId: cubit.state.studentId,
-        onSelected: (id) {
-          Navigator.of(sheetContext).pop();
-          cubit.loadStudent(id);
-        },
-      ),
+      anchor: _studentNameAnchor,
+      initialStudents: cubit.demoStudents,
+      students: cubit.loadDemoStudents(),
+      selectedId: cubit.state.studentId,
     );
+    if (!mounted) return;
+    setState(() => _studentMenuOpen = false);
+    if (selectedId != null) await cubit.loadStudent(selectedId);
   }
 }
 

@@ -48,6 +48,21 @@ abstract final class AppDimensions {
   static const licenceSize = Size(36, 40);
   static const licencePadding = EdgeInsets.all(2.5);
   static const headerPadding = EdgeInsets.symmetric(horizontal: 2);
+  static const studentMenuWidth = 248.0;
+  static const studentMenuRowHeight = 52.0;
+  static const studentMenuAvatarSize = 32.0;
+  static const studentMenuPadding = EdgeInsets.all(8);
+  static const studentMenuRowPadding = EdgeInsets.symmetric(
+    horizontal: 12,
+    vertical: 8,
+  );
+  static const studentMenuShadows = [
+    BoxShadow(
+      color: AppColors.studentMenuShadow,
+      offset: Offset(0, 12),
+      blurRadius: 32,
+    ),
+  ];
   static const sectionPillPadding = EdgeInsets.symmetric(
     horizontal: 10,
     vertical: 5,

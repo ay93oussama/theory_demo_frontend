@@ -33,4 +33,5 @@ abstract final class AppColors {
   static const sheetScrim = Color(0x6116181D);
   static const gaugeTicks = Color(0x4716181D);
   static const transparent = Color(0x00000000);
+  static const studentMenuShadow = Color(0x2216181D);
 }

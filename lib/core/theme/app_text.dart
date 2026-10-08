@@ -5,6 +5,11 @@ import 'app_colors.dart';
 abstract final class AppText {
   static const fontFamily = 'Schibsted Grotesk';
   static const normalLineHeight = 1.2;
+  static final studentMenuLabel = label.copyWith(fontSize: 12);
+  static final studentMenuName = sectionTitle.copyWith(
+    fontWeight: FontWeight.w600,
+  );
+  static final studentMenuInitial = label.copyWith(fontWeight: FontWeight.w700);
   static final loaderPill = statusPill.copyWith(color: AppColors.primaryInk);
   static final loaderCheck = statusPill.copyWith(
     color: AppColors.surface,
