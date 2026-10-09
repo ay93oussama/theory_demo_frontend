@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/constants/app_strings.dart';
 import 'package:theory_demo_frontend/core/theme/app_dimensions.dart';
 import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/presentation/widgets/gauge_card.dart';
 import 'package:theory_demo_frontend/presentation/widgets/progress_gauge.dart';
+
+import '../support/test_app.dart';
 
 void main() {
   testWidgets('complete card shows German completion and accessible totals', (
@@ -140,7 +141,7 @@ Future<void> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   await tester.pumpWidget(
-    TheoryProgressApp(
+    TestApp(
       home: MediaQuery(
         data: MediaQueryData(
           textScaler: TextScaler.linear(textScale),

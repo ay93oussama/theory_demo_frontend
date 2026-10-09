@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/constants/app_strings.dart';
 import 'package:theory_demo_frontend/core/theme/app_dimensions.dart';
 import 'package:theory_demo_frontend/presentation/widgets/error_card.dart';
 import 'package:theory_demo_frontend/presentation/widgets/next_step_row.dart';
 import 'package:theory_demo_frontend/presentation/widgets/progress_header.dart';
 import 'package:theory_demo_frontend/presentation/widgets/section_card.dart';
+
+import '../support/test_app.dart';
 
 void main() {
   testWidgets('section cards show German progress and accessible counts', (
@@ -149,7 +150,7 @@ Future<void> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   await tester.pumpWidget(
-    TheoryProgressApp(
+    TestApp(
       home: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
         child: Scaffold(

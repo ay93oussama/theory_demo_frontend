@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/config/app_config.dart';
 import 'package:theory_demo_frontend/core/constants/app_strings.dart';
+import 'package:theory_demo_frontend/core/di/injection_container.dart';
 import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/core/theme/app_dimensions.dart';
 import 'package:theory_demo_frontend/domain/entities/theory_progress.dart';
@@ -17,6 +18,8 @@ import 'package:theory_demo_frontend/presentation/widgets/section_segments.dart'
 import '../support/progress_fixtures.dart';
 
 void main() {
+  tearDown(() => getIt.reset());
+
   testWidgets(
     'card opens answers, switches sections without fetching, and closes',
     (tester) async {
@@ -228,17 +231,17 @@ Future<void> _pump(
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
-  await tester.pumpWidget(
-    TheoryProgressApp(
-      createCubit: () => TheoryProgressCubit(
-        GetTheoryProgressUseCase(repo),
-        config: const AppConfig(
-          apiBaseUrl: 'http://localhost:8080',
-          demoMode: false,
-        ),
+  await getIt.reset();
+  getIt.registerFactory(
+    () => TheoryProgressCubit(
+      GetTheoryProgressUseCase(repo),
+      config: const AppConfig(
+        apiBaseUrl: 'http://localhost:8080',
+        demoMode: false,
       ),
     ),
   );
+  await tester.pumpWidget(const TheoryProgressApp());
   await tester.pump(AppMotion.minimumLoading);
   await tester.pumpAndSettle();
 }

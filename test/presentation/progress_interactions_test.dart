@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/constants/app_strings.dart';
 import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/domain/entities/theory_progress.dart';
@@ -8,6 +7,8 @@ import 'package:theory_demo_frontend/presentation/widgets/app_modal_sheet.dart';
 import 'package:theory_demo_frontend/presentation/widgets/book_exam_button.dart';
 import 'package:theory_demo_frontend/presentation/widgets/next_step_row.dart';
 import 'package:theory_demo_frontend/presentation/widgets/road_sheet.dart';
+
+import '../support/test_app.dart';
 
 void main() {
   testWidgets(
@@ -135,7 +136,7 @@ Future<void> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   await tester.pumpWidget(
-    TheoryProgressApp(
+    TestApp(
       home: Builder(
         builder: (context) => Scaffold(
           body: SafeArea(

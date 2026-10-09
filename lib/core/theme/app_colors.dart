@@ -21,7 +21,6 @@ abstract final class AppColors {
   static const successPressed = Color(0xFF197349);
   static const successInk = Color(0xFF1F7F53);
   static const successTint = Color(0xFFDFF2E7);
-  static const successBorder = Color(0xFFBFE5CF);
   static const danger = Color(0xFFC8432B);
   static const dangerTint = Color(0xFFFBE3DC);
   static const licenceBlue = Color(0xFF1C5BB8);

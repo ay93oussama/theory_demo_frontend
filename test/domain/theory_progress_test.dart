@@ -114,7 +114,6 @@ void main() {
     expect(progress.progressRatio, .5);
     expect(progress.basicTopics.remaining, 2);
     expect(progress.basicTopics.filledSegments, 3);
-    expect(progress.basicTopics.progressRatio, .6);
     expect(progress.specialTopics.remaining, 2);
     expect(progress.specialTopics.status, TopicProgressStatus.inProgress);
   });
@@ -127,7 +126,6 @@ void main() {
       expect(progress.totalAttended, 21);
       expect(progress.basicTopics.attended, 20);
       expect(progress.basicTopics.filledSegments, 12);
-      expect(progress.basicTopics.progressRatio, 1);
       expect(progress.basicTopics.remaining, 0);
       expect(progress.basicTopics.status, TopicProgressStatus.complete);
       expect(progress.remainingLessons, 1);

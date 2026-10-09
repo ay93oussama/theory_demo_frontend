@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 import 'app_dimensions.dart';
-import 'app_motion.dart';
 import 'app_text.dart';
 
 abstract final class AppTheme {
@@ -48,38 +47,6 @@ abstract final class AppTheme {
       labelLarge: AppText.button,
       labelMedium: AppText.sectionPill,
       labelSmall: AppText.statusPill,
-    ),
-    cardTheme: const CardThemeData(
-      color: AppColors.surface,
-      surfaceTintColor: AppColors.transparent,
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(AppDimensions.radius22)),
-      ),
-    ),
-    filledButtonTheme: FilledButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          return states.contains(WidgetState.pressed)
-              ? AppColors.inkHover
-              : AppColors.ink;
-        }),
-        foregroundColor: const WidgetStatePropertyAll(AppColors.surface),
-        textStyle: const WidgetStatePropertyAll(AppText.button),
-        minimumSize: const WidgetStatePropertyAll(
-          Size(0, AppDimensions.retryHeight),
-        ),
-        padding: const WidgetStatePropertyAll(AppDimensions.retryPadding),
-        shape: const WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(AppDimensions.radius14),
-            ),
-          ),
-        ),
-        animationDuration: AppMotion.color,
-      ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.background,

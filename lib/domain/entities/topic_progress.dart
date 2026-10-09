@@ -21,7 +21,6 @@ final class TopicProgress extends Equatable {
   bool get isComplete => attended >= required;
   int get remaining => math.max(required - attended, 0);
   int get filledSegments => math.min(attended, required);
-  double get progressRatio => filledSegments / required;
 
   TopicProgressStatus get status {
     if (isComplete) return TopicProgressStatus.complete;

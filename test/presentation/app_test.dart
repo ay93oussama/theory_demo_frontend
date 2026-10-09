@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/config/app_config.dart';
+import 'package:theory_demo_frontend/core/di/injection_container.dart';
 import 'package:theory_demo_frontend/core/errors/app_failure.dart';
 import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/domain/entities/theory_progress.dart';
@@ -18,6 +19,8 @@ import 'package:theory_demo_frontend/presentation/widgets/theory_progress_loadin
 import '../support/progress_fixtures.dart';
 
 void main() {
+  tearDown(() => getIt.reset());
+
   testWidgets('blank API names use a selectable fallback and safe initials', (
     tester,
   ) async {
@@ -236,15 +239,15 @@ Future<void> _pump(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   addTearDown(tester.platformDispatcher.clearLocaleTestValue);
-  await tester.pumpWidget(
-    TheoryProgressApp(
-      createCubit: () => TheoryProgressCubit(
-        GetTheoryProgressUseCase(repo),
-        config: AppConfig(
-          apiBaseUrl: 'http://localhost:8080',
-          demoMode: demoMode,
-        ),
+  await getIt.reset();
+  getIt.registerFactory(
+    () => TheoryProgressCubit(
+      GetTheoryProgressUseCase(repo),
+      config: AppConfig(
+        apiBaseUrl: 'http://localhost:8080',
+        demoMode: demoMode,
       ),
     ),
   );
+  await tester.pumpWidget(const TheoryProgressApp());
 }

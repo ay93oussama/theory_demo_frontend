@@ -75,7 +75,6 @@ abstract final class AppDimensions {
   static const segmentHeight = 6.0;
   static const segmentMaxWidth = 24.0;
   static const segmentGap = 6.0;
-  static const sectionDoneSize = 18.0;
   static const sectionDoneCheckSize = 12.0;
   static const sectionChevronSize = 16.0;
   static const sectionQuestionPadding = EdgeInsets.symmetric(vertical: 14);

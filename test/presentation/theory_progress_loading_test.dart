@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theory_demo_frontend/app.dart';
 import 'package:theory_demo_frontend/core/theme/app_dimensions.dart';
 import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/presentation/widgets/theory_progress_loading.dart';
+
+import '../support/test_app.dart';
 
 void main() {
   test(
@@ -94,7 +95,7 @@ Future<void> _pump(
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
   addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
   await tester.pumpWidget(
-    TheoryProgressApp(
+    TestApp(
       home: Scaffold(
         body: SafeArea(
           child: ListView(
