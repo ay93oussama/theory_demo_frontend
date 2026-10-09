@@ -27,8 +27,12 @@ void main() {
       await future;
       final state = cubit.state as TheoryProgressLoadedState;
       expect(state.studentName, 'Tom');
-      expect(state.display.basicCount, '8 von 12');
-      expect(state.display.specialCount, '1 von 2');
+      expect(state.display.basicSheet.attendedLabel, '8 von 12');
+      expect(state.display.specialSheet.attendedLabel, '1 von 2');
+      expect(state.display.progressRatio, 9 / 14);
+      expect(state.display.isComplete, isFalse);
+      expect(state.display.lessonsStatus, RoadStepStatus.current);
+      expect(state.display.examStatus, RoadStepStatus.locked);
       expect(state.updatedLabel, contains('gerade eben'));
       now = now.add(const Duration(minutes: 5));
       await tester.pump(AppMotion.timestampInterval);

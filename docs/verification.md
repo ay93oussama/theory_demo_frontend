@@ -20,11 +20,11 @@ current visual reference. Backend files were not changed.
 | Road sheet and booking toast | Open/close and booking exercised | Covered by widget tests |
 | Larger system text | Accessibility Extra Large: progress, selector, sheet and toast | Font scale 2.0: completed screen |
 
-The one-section-complete scenario uses `example/main.dart` with
-`PREVIEW_SCENARIO=partial`. It is deliberately a frontend fixture because the
-backend's three students do not include that case. Its overall status stays
-`In Arbeit`, the basic section shows `Alles besucht`, and the special section
-still shows `1 von 2`.
+During task 8, the one-section-complete scenario was inspected using a frontend
+fixture in the former standalone preview, which has since been removed. The
+backend's three students do not include that case. Its overall status stayed
+`In Arbeit`, the basic section showed `Alles besucht`, and the special section
+showed `1 von 2`. Automated test fixtures still cover section-only completion.
 
 ## Accessibility and visual findings
 
@@ -42,7 +42,7 @@ still shows `1 von 2`.
 ## Automated checks
 
 ```sh
-dart format --output=none --set-exit-if-changed lib example test
+dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test
 ```

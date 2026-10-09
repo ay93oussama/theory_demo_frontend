@@ -6,6 +6,7 @@ import '../../core/theme/app_dimensions.dart';
 import '../../core/theme/app_motion.dart';
 import '../../core/theme/app_text.dart';
 import '../cubits/theory_progress/theory_progress_state.dart';
+import 'app_sheet_content.dart';
 import 'pressable.dart';
 import 'section_segments.dart';
 import 'section_status_chip.dart';
@@ -39,137 +40,71 @@ class _SectionProgressSheetState extends State<SectionProgressSheet> {
       (AppStrings.sectionTimetableQuestion, AppStrings.sectionTimetableAnswer),
       (AppStrings.sectionCompletionQuestion, display.completionAnswer),
     ];
-    return Semantics(
-      scopesRoute: true,
-      namesRoute: true,
-      label: display.title,
-      explicitChildNodes: true,
-      child: SingleChildScrollView(
-        padding: AppDimensions.sheetPadding.copyWith(
-          bottom:
-              AppDimensions.sheetPadding.bottom +
-              MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: ExcludeSemantics(
-                child: Container(
-                  width: AppDimensions.sheetHandleSize.width,
-                  height: AppDimensions.sheetHandleSize.height,
-                  decoration: BoxDecoration(
-                    color: AppColors.handle,
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.radiusPill,
-                    ),
-                  ),
-                ),
-              ),
+    return AppSheetContent(
+      title: display.title,
+      children: [
+        _ProgressSummary(display: display),
+        const SizedBox(height: AppDimensions.space16),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppDimensions.radius22),
+            border: Border.all(
+              color: AppColors.border,
+              width: AppDimensions.borderWidth,
             ),
-            const SizedBox(height: AppDimensions.space16),
-            Padding(
-              padding: AppDimensions.headerPadding,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(display.title, style: AppText.sheetTitle),
+          ),
+          child: Padding(
+            padding: AppDimensions.sectionQuestionsPadding,
+            child: Column(
+              children: [
+                for (var index = 0; index < questions.length; index++) ...[
+                  if (index > 0)
+                    const Divider(
+                      height: AppDimensions.thinBorderWidth,
+                      thickness: AppDimensions.thinBorderWidth,
+                      color: AppColors.border,
                     ),
-                  ),
-                  const SizedBox(width: AppDimensions.space10),
-                  IconButton(
-                    tooltip: AppStrings.close,
-                    onPressed: () => Navigator.of(context).pop(),
-                    constraints: const BoxConstraints.tightFor(
-                      width: AppDimensions.minTapTarget,
-                      height: AppDimensions.minTapTarget,
-                    ),
-                    padding: EdgeInsets.zero,
-                    icon: Container(
-                      width: AppDimensions.sheetCloseSize,
-                      height: AppDimensions.sheetCloseSize,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surface,
-                      ),
-                      child: const Icon(
-                        Icons.close,
-                        color: AppColors.ink,
-                        size: AppDimensions.sheetCloseIconSize,
-                      ),
-                    ),
+                  _Question(
+                    question: questions[index].$1,
+                    answer: questions[index].$2,
+                    expanded: _expandedQuestion == index,
+                    onTap: () => setState(() {
+                      _expandedQuestion = _expandedQuestion == index
+                          ? null
+                          : index;
+                    }),
                   ),
                 ],
-              ),
+              ],
             ),
-            const SizedBox(height: AppDimensions.space16),
-            _ProgressSummary(display: display),
-            const SizedBox(height: AppDimensions.space16),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(AppDimensions.radius22),
-                border: Border.all(
-                  color: AppColors.border,
-                  width: AppDimensions.borderWidth,
-                ),
-              ),
-              child: Padding(
-                padding: AppDimensions.sectionQuestionsPadding,
-                child: Column(
-                  children: [
-                    for (var index = 0; index < questions.length; index++) ...[
-                      if (index > 0)
-                        const Divider(
-                          height: AppDimensions.thinBorderWidth,
-                          thickness: AppDimensions.thinBorderWidth,
-                          color: AppColors.border,
-                        ),
-                      _Question(
-                        question: questions[index].$1,
-                        answer: questions[index].$2,
-                        expanded: _expandedQuestion == index,
-                        onTap: () => setState(() {
-                          _expandedQuestion = _expandedQuestion == index
-                              ? null
-                              : index;
-                        }),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: AppDimensions.space16),
-            Pressable(
-              borderRadius: BorderRadius.circular(AppDimensions.radius16),
-              pressedScale: AppMotion.actionPressedScale,
-              background: AppColors.ink,
-              pressedBackground: AppColors.inkHover,
-              onTap: () => setState(() {
-                _showBasic = !_showBasic;
-                _expandedQuestion = 0;
-              }),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: AppDimensions.retryHeight,
-                ),
-                child: Padding(
-                  padding: AppDimensions.nextStepPadding,
-                  child: Text(
-                    display.otherSectionAction,
-                    style: AppText.button,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: AppDimensions.space16),
+        Pressable(
+          borderRadius: BorderRadius.circular(AppDimensions.radius16),
+          pressedScale: AppMotion.actionPressedScale,
+          background: AppColors.ink,
+          pressedBackground: AppColors.inkHover,
+          onTap: () => setState(() {
+            _showBasic = !_showBasic;
+            _expandedQuestion = 0;
+          }),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: AppDimensions.retryHeight,
+            ),
+            child: Padding(
+              padding: AppDimensions.nextStepPadding,
+              child: Text(
+                display.otherSectionAction,
+                style: AppText.button,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

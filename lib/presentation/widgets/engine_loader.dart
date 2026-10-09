@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_assets.dart';
@@ -16,11 +14,27 @@ class EngineLoader extends StatefulWidget {
 
 class _EngineLoaderState extends State<EngineLoader>
     with SingleTickerProviderStateMixin {
-  late final _cycle = AnimationController(
-    vsync: this,
-    duration: AppMotion.engineCycle,
-  );
+  late final AnimationController _cycle;
+  late final Animation<Offset> _leftPiston;
+  late final Animation<Offset> _rightPiston;
+  late final Animation<double> _leftSparkOpacity;
+  late final Animation<double> _rightSparkOpacity;
+  late final Animation<double> _leftSparkScale;
+  late final Animation<double> _rightSparkScale;
   bool? _reduceMotion;
+
+  @override
+  void initState() {
+    super.initState();
+    _cycle = AnimationController(vsync: this, duration: AppMotion.engineCycle);
+    final rightCycle = _cycle.drive(AppMotion.engineHalfCycle);
+    _leftPiston = _cycle.drive(AppMotion.pistonOffset);
+    _rightPiston = rightCycle.drive(AppMotion.pistonOffset);
+    _leftSparkOpacity = _cycle.drive(AppMotion.sparkOpacity);
+    _rightSparkOpacity = rightCycle.drive(AppMotion.sparkOpacity);
+    _leftSparkScale = _leftSparkOpacity.drive(AppMotion.sparkScale);
+    _rightSparkScale = _rightSparkOpacity.drive(AppMotion.sparkScale);
+  }
 
   @override
   void didChangeDependencies() {
@@ -49,8 +63,18 @@ class _EngineLoaderState extends State<EngineLoader>
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            _Cylinder(cycle: _cycle, isRight: false),
-            _Cylinder(cycle: _cycle, isRight: true),
+            _Cylinder(
+              angle: AppMotion.engineLeftTilt,
+              pistonOffset: _leftPiston,
+              sparkOpacity: _leftSparkOpacity,
+              sparkScale: _leftSparkScale,
+            ),
+            _Cylinder(
+              angle: AppMotion.engineRightTilt,
+              pistonOffset: _rightPiston,
+              sparkOpacity: _rightSparkOpacity,
+              sparkScale: _rightSparkScale,
+            ),
             Positioned.fromRect(
               rect: AppDimensions.engineIntakeRect,
               child: const _EngineImage(AppAssets.engineIntake),
@@ -74,46 +98,35 @@ class _EngineLoaderState extends State<EngineLoader>
 }
 
 class _Cylinder extends StatelessWidget {
-  const _Cylinder({required this.cycle, required this.isRight});
+  const _Cylinder({
+    required this.angle,
+    required this.pistonOffset,
+    required this.sparkOpacity,
+    required this.sparkScale,
+  });
 
-  final Animation<double> cycle;
-  final bool isRight;
-
-  double get _phase => (cycle.value + (isRight ? .5 : 0)) % 1;
+  final double angle;
+  final Animation<Offset> pistonOffset;
+  final Animation<double> sparkOpacity;
+  final Animation<double> sparkScale;
 
   @override
   Widget build(BuildContext context) => Positioned.fromRect(
     rect: AppDimensions.engineCylinderRect,
     child: Transform.rotate(
-      angle: AppMotion.engineTiltDegrees * (isRight ? 1 : -1) * math.pi / 180,
+      angle: angle,
       alignment: AppDimensions.engineCylinderPivot,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Positioned.fromRect(
             rect: AppDimensions.engineSparkRect,
-            child: AnimatedBuilder(
-              animation: cycle,
-              child: const _EngineImage(AppAssets.engineSpark),
-              builder: (_, child) {
-                final phase = _phase;
-                final glow = phase < AppMotion.sparkStart
-                    ? 0.0
-                    : phase < AppMotion.sparkPeak
-                    ? (phase - AppMotion.sparkStart) /
-                          (AppMotion.sparkPeak - AppMotion.sparkStart)
-                    : (1 - phase) / (1 - AppMotion.sparkPeak);
-                return Opacity(
-                  opacity: glow.clamp(0, 1),
-                  child: Transform.scale(
-                    scale:
-                        AppMotion.sparkMinScale +
-                        (AppMotion.sparkMaxScale - AppMotion.sparkMinScale) *
-                            glow,
-                    child: child,
-                  ),
-                );
-              },
+            child: FadeTransition(
+              opacity: sparkOpacity,
+              child: ScaleTransition(
+                scale: sparkScale,
+                child: const _EngineImage(AppAssets.engineSpark),
+              ),
             ),
           ),
           Positioned.fromRect(
@@ -131,18 +144,12 @@ class _Cylinder extends StatelessWidget {
                   Positioned.fromRect(
                     rect: AppDimensions.enginePistonRect,
                     child: AnimatedBuilder(
-                      animation: cycle,
+                      animation: pistonOffset,
                       child: const _EngineImage(AppAssets.enginePiston),
-                      builder: (_, child) {
-                        final phase = _phase;
-                        final travel = AppMotion.engineCurve.transform(
-                          phase < .5 ? phase * 2 : 2 - phase * 2,
-                        );
-                        return Transform.translate(
-                          offset: Offset(0, AppMotion.pistonTravel * travel),
-                          child: child,
-                        );
-                      },
+                      builder: (_, child) => Transform.translate(
+                        offset: pistonOffset.value,
+                        child: child,
+                      ),
                     ),
                   ),
                 ],

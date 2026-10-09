@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/animation.dart';
 
 abstract final class AppMotion {
@@ -35,11 +37,43 @@ abstract final class AppMotion {
   static const actionPressedScale = .98;
   static const skeletonMinOpacity = .45;
   static const engineTiltDegrees = 34.0;
+  static const engineLeftTilt = -engineTiltDegrees * math.pi / 180;
+  static const engineRightTilt = engineTiltDegrees * math.pi / 180;
   static const pistonTravel = 56.0;
   static const sparkStart = .8;
   static const sparkPeak = .88;
   static const sparkMinScale = .6;
   static const sparkMaxScale = 1.4;
+
+  static const engineHalfCycle = _PhaseShift(.5);
+  static final pistonOffset = TweenSequence<Offset>([
+    TweenSequenceItem(
+      tween: Tween<Offset>(
+        begin: Offset.zero,
+        end: const Offset(0, pistonTravel),
+      ).chain(CurveTween(curve: engineCurve)),
+      weight: 1,
+    ),
+    TweenSequenceItem(
+      tween: Tween<Offset>(
+        begin: const Offset(0, pistonTravel),
+        end: Offset.zero,
+      ).chain(CurveTween(curve: engineCurve)),
+      weight: 1,
+    ),
+  ]);
+  static final sparkOpacity = TweenSequence<double>([
+    TweenSequenceItem(tween: ConstantTween(0.0), weight: sparkStart),
+    TweenSequenceItem(
+      tween: Tween(begin: 0.0, end: 1.0),
+      weight: sparkPeak - sparkStart,
+    ),
+    TweenSequenceItem(
+      tween: Tween(begin: 1.0, end: 0.0),
+      weight: 1 - sparkPeak,
+    ),
+  ]);
+  static final sparkScale = Tween(begin: sparkMinScale, end: sparkMaxScale);
 
   static final rpm = TweenSequence<double>([
     TweenSequenceItem(tween: _engineTween(.1, .85), weight: 45),
@@ -56,4 +90,13 @@ abstract final class AppMotion {
         begin: begin,
         end: end,
       ).chain(CurveTween(curve: engineCurve));
+}
+
+/// Keeps the second cylinder half a cycle behind, including at the loop boundary.
+class _PhaseShift extends Animatable<double> {
+  const _PhaseShift(this.offset);
+  final double offset;
+
+  @override
+  double transform(double t) => (t + offset) % 1;
 }

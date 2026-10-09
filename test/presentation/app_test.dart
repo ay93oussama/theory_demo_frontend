@@ -18,6 +18,45 @@ import 'package:theory_demo_frontend/presentation/widgets/theory_progress_loadin
 import '../support/progress_fixtures.dart';
 
 void main() {
+  testWidgets('blank API names use a selectable fallback and safe initials', (
+    tester,
+  ) async {
+    final repo = FakeProgressRepository()
+      ..handler = (id) async {
+        final progress = progressFixture(id);
+        return Right(
+          TheoryProgress(
+            studentId: id,
+            studentName: switch (id) {
+              '1' => '',
+              '2' => ' \n ',
+              _ => '  👩🏽‍🚀 Ada  ',
+            },
+            licenseClass: progress.licenseClass,
+            basicTopics: progress.basicTopics,
+            specialTopics: progress.specialTopics,
+            completed: progress.completed,
+          ),
+        );
+      };
+    await _pump(tester, repo);
+    await _finishLoading(tester);
+    expect(find.text('Fahrschüler 1'), findsOneWidget);
+    await tester.tap(find.text('Fahrschüler 1'));
+    await tester.pumpAndSettle();
+    expect(find.text('Fahrschüler 2'), findsOneWidget);
+    expect(find.text('F'), findsOneWidget);
+    expect(find.text('👩🏽‍🚀 Ada'), findsOneWidget);
+    expect(find.text('👩🏽‍🚀'), findsOneWidget);
+    await tester.tap(find.text('Fahrschüler 2'));
+    await _finishLoading(tester);
+    expect(find.byType(DemoStudentMenu), findsNothing);
+    expect(find.text('Fahrschüler 2'), findsOneWidget);
+    expect(find.text('0 von 12 besucht'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets(
     'German live screen selects students, shows complete/zero states, and refreshes',
     (tester) async {

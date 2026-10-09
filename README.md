@@ -10,7 +10,7 @@ design tokens, bundled Schibsted Grotesk fonts, layer structure, and dependencie
 Task 2 adds framework-free failures, the use-case base, domain entities and
 progress rules, the repository contract, and the progress use case with tests.
 Task 3 adds the header/badge, section cards, next-step row, error card, and pressed
-feedback. An explicit debug-only entry point previews these with local fixtures.
+feedback, with local fixtures in the widget tests.
 Task 4 adds the gauge card, custom-painted arc/ticks/needle, and completion copy.
 The gauge animates over 900 ms after an 80 ms delay, transitions color over 400 ms,
 and shows its final state immediately when reduced motion is enabled.
@@ -69,24 +69,6 @@ flutter run -d <simulator-device-id> --dart-define=DEMO_MODE=true
 Select the iPhone 17 Pro Max simulator or the Android emulator explicitly.
 Web and desktop are excluded from this project; their untouched starter folders
 do not indicate supported targets.
-
-## Preview the components
-
-```sh
-flutter run -d <simulator-device-id> -t example/main.dart
-flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=complete
-flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=error
-flutter run -d <simulator-device-id> -t example/main.dart --dart-define=PREVIEW_SCENARIO=loading
-```
-
-Scenarios: `progress` (default), `empty`, `partial`, `special-complete`, `complete`,
-`error`, `not-found`, `loading`. The loading preview stays visible for inspection.
-All names/counts in this entry point are frontend fixtures;
-it does not contact the backend and cannot run in release/profile mode. Retry in
-the preview switches back to the progress fixture. Tap the next-step row to open
-the road sheet, including before completion. The complete fixture also provides
-the booking button and toast. Use the default entry point for live student selection.
-There is no scenario-switching panel in the app.
 
 ## Backend contract and configuration
 
@@ -155,7 +137,7 @@ The engine uses the six supplied PNG parts in `assets/engine/`, with their 2× a
 ## Checks
 
 ```sh
-dart format --output=none --set-exit-if-changed lib example test
+dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test
 ```

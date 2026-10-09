@@ -83,9 +83,9 @@ void main() {
   );
 
   testWidgets(
-    'completed road and booking work at 2x text with reduced motion',
+    'completed road remains dismissible at 3x text with reduced motion',
     (tester) async {
-      await _pump(tester, complete: true, textScale: 2, reduceMotion: true);
+      await _pump(tester, complete: true, textScale: 3, reduceMotion: true);
       await tester.tap(find.text(AppStrings.nextTitle));
       await tester.pumpAndSettle();
       expect(
@@ -100,9 +100,14 @@ void main() {
       );
       await tester.ensureVisible(find.text(AppStrings.step4Title));
       expect(tester.takeException(), isNull);
-      await tester.ensureVisible(find.byTooltip(AppStrings.close));
-      await tester.tap(find.byTooltip(AppStrings.close));
+      await tester.ensureVisible(find.text(AppStrings.roadTitle));
+      await tester.fling(
+        find.text(AppStrings.roadTitle),
+        const Offset(0, 400),
+        1200,
+      );
       await tester.pumpAndSettle();
+      expect(find.byType(RoadSheet), findsNothing);
       await tester.tap(find.text(AppStrings.bookExam));
       await tester.pump();
       expect(find.text(AppStrings.bookToast), findsOneWidget);

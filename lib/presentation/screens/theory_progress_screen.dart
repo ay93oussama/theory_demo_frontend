@@ -120,12 +120,11 @@ class _LoadedProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = state.progress;
     final display = state.display;
     final children = <Widget>[
       GaugeCard(
-        progress: progress.progressRatio,
-        isComplete: progress.completed,
+        progress: display.progressRatio,
+        isComplete: display.isComplete,
         totalLabel: display.count,
         totalSuffix: display.suffix,
         statusLabel: display.status,
@@ -133,32 +132,32 @@ class _LoadedProgress extends StatelessWidget {
         subline: display.subline,
         semanticsLabel: display.semantics,
       ),
-      if (progress.completed) const BookExamButton(),
+      if (display.isComplete) const BookExamButton(),
       SectionCard(
-        title: AppStrings.sectionBasic,
-        attendedLabel: display.basicCount,
-        statusLabel: display.basicStatus,
-        requiredCount: progress.basicTopics.required,
-        filledCount: progress.basicTopics.filledSegments,
-        isComplete: progress.basicTopics.isComplete,
+        title: display.basicSheet.title,
+        attendedLabel: display.basicSheet.attendedLabel,
+        statusLabel: display.basicSheet.statusLabel,
+        requiredCount: display.basicSheet.requiredCount,
+        filledCount: display.basicSheet.filledCount,
+        isComplete: display.basicSheet.isComplete,
         onTap: () => _showSection(context, initiallyBasic: true),
       ),
       SectionCard(
-        title: AppStrings.sectionSpecial,
-        attendedLabel: display.specialCount,
-        statusLabel: display.specialStatus,
-        requiredCount: progress.specialTopics.required,
-        filledCount: progress.specialTopics.filledSegments,
-        isComplete: progress.specialTopics.isComplete,
+        title: display.specialSheet.title,
+        attendedLabel: display.specialSheet.attendedLabel,
+        statusLabel: display.specialSheet.statusLabel,
+        requiredCount: display.specialSheet.requiredCount,
+        filledCount: display.specialSheet.filledCount,
+        isComplete: display.specialSheet.isComplete,
         onTap: () => _showSection(context, initiallyBasic: false),
       ),
       NextStepRow(
-        isReady: progress.completed,
+        isReady: display.isComplete,
         onTap: () => showAppModalSheet(
           context: context,
           builder: (_) => RoadSheet(
-            lessonsStatus: progress.theoryLessonsStatus,
-            examStatus: progress.theoryExamStatus,
+            lessonsStatus: display.lessonsStatus,
+            examStatus: display.examStatus,
             lessonsMeta: display.lessonsMeta,
             examMeta: display.examMeta,
           ),

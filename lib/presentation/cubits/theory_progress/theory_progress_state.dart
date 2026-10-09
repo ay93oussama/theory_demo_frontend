@@ -53,16 +53,16 @@ typedef SectionSheetDisplay = ({
 });
 
 typedef ProgressDisplay = ({
+  double progressRatio,
+  bool isComplete,
+  RoadStepStatus lessonsStatus,
+  RoadStepStatus examStatus,
   String status,
   String headline,
   String subline,
   String count,
   String suffix,
   String semantics,
-  String basicCount,
-  String basicStatus,
-  String specialCount,
-  String specialStatus,
   String lessonsMeta,
   String examMeta,
   SectionSheetDisplay basicSheet,
@@ -75,9 +75,9 @@ final class TheoryProgressLoadedState extends TheoryProgressState {
     required this.display,
     required this.fetchedAt,
     required this.updatedLabel,
+    required super.studentName,
   }) : super(
          studentId: progress.studentId,
-         studentName: progress.studentName,
          licenseClass: progress.licenseClass,
        );
 
@@ -97,9 +97,14 @@ final class TheoryProgressLoadedState extends TheoryProgressState {
 }
 
 final class DemoStudent extends Equatable {
-  const DemoStudent({required this.id, required this.name});
+  const DemoStudent({
+    required this.id,
+    required this.name,
+    required this.initial,
+  });
   final String id;
   final String name;
+  final String initial;
   @override
-  List<Object> get props => [id, name];
+  List<Object> get props => [id, name, initial];
 }

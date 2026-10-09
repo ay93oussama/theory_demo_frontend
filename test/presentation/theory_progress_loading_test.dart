@@ -6,6 +6,35 @@ import 'package:theory_demo_frontend/core/theme/app_motion.dart';
 import 'package:theory_demo_frontend/presentation/widgets/theory_progress_loading.dart';
 
 void main() {
+  test(
+    'engine keeps its 56px travel, alternating phase, and spark keyframes',
+    () {
+      for (final (phase, left, right) in [
+        (0.0, 0.0, 56.0),
+        (.5, 56.0, 0.0),
+        (1.0, 0.0, 56.0),
+      ]) {
+        expect(AppMotion.pistonOffset.transform(phase).dy, closeTo(left, .001));
+        expect(
+          AppMotion.pistonOffset
+              .transform(AppMotion.engineHalfCycle.transform(phase))
+              .dy,
+          closeTo(right, .001),
+        );
+      }
+      expect(AppMotion.sparkOpacity.transform(0), 0);
+      expect(AppMotion.sparkOpacity.transform(.8), 0);
+      expect(AppMotion.sparkOpacity.transform(.88), closeTo(1, .001));
+      expect(AppMotion.sparkOpacity.transform(1), 0);
+      final rightSpark = AppMotion.sparkOpacity.transform(
+        AppMotion.engineHalfCycle.transform(.38),
+      );
+      expect(rightSpark, closeTo(1, .001));
+      expect(AppMotion.sparkScale.transform(0), .6);
+      expect(AppMotion.sparkScale.transform(rightSpark), closeTo(1.4, .001));
+    },
+  );
+
   testWidgets(
     'loading animates, responds to reduced motion, and disposes cleanly',
     (tester) async {

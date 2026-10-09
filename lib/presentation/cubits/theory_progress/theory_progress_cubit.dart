@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart' show StringCharacters;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/config/app_config.dart';
@@ -36,10 +37,17 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
   Timer? _timestampTimer;
   Future<List<DemoStudent>>? _demoRequest;
 
-  List<DemoStudent> get demoStudents => List.unmodifiable([
-    for (final id in DemoStudents.ids)
-      DemoStudent(id: id, name: _names[id] ?? AppStrings.studentFallback(id)),
-  ]);
+  List<DemoStudent> get demoStudents =>
+      List.unmodifiable([for (final id in DemoStudents.ids) _demoStudent(id)]);
+
+  DemoStudent _demoStudent(String id) {
+    final name = _names[id] ?? AppStrings.studentFallback(id);
+    return DemoStudent(
+      id: id,
+      name: name,
+      initial: name.characters.first.toUpperCase(),
+    );
+  }
 
   Future<void> refresh() => loadStudent(state.studentId);
 
@@ -118,7 +126,10 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
   }
 
   void _cacheIdentity(TheoryProgress progress) {
-    _names[progress.studentId] = progress.studentName;
+    final name = progress.studentName.trim();
+    _names[progress.studentId] = name.isEmpty
+        ? AppStrings.studentFallback(progress.studentId)
+        : name;
     _classes[progress.studentId] = progress.licenseClass;
   }
 
@@ -159,11 +170,16 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
     final minutes = _now().difference(fetchedAt).inMinutes;
     return TheoryProgressLoadedState(
       progress: progress,
+      studentName: _names[progress.studentId]!,
       fetchedAt: fetchedAt,
       updatedLabel: AppStrings.updated(
         minutes <= 0 ? AppStrings.justNow : AppStrings.minutesAgo(minutes),
       ),
       display: (
+        progressRatio: progress.progressRatio,
+        isComplete: progress.completed,
+        lessonsStatus: progress.theoryLessonsStatus,
+        examStatus: progress.theoryExamStatus,
         status: status,
         headline: headline,
         subline: subline,
@@ -174,16 +190,6 @@ final class TheoryProgressCubit extends Cubit<TheoryProgressState> {
           progress.totalRequired,
           status,
         ),
-        basicCount: AppStrings.attendedOf(
-          progress.basicTopics.attended,
-          progress.basicTopics.required,
-        ),
-        basicStatus: _sectionStatus(progress.basicTopics),
-        specialCount: AppStrings.attendedOf(
-          progress.specialTopics.attended,
-          progress.specialTopics.required,
-        ),
-        specialStatus: _sectionStatus(progress.specialTopics),
         basicSheet: _sectionSheet(progress, isBasic: true),
         specialSheet: _sectionSheet(progress, isBasic: false),
         lessonsMeta: progress.completed

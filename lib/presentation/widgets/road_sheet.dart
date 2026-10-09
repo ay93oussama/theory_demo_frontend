@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_dimensions.dart';
 import '../../core/theme/app_text.dart';
 import '../../domain/entities/theory_progress.dart';
+import 'app_sheet_content.dart';
 
 class RoadSheet extends StatelessWidget {
   const RoadSheet({
@@ -21,110 +22,52 @@ class RoadSheet extends StatelessWidget {
   final String examMeta;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    scopesRoute: true,
-    namesRoute: true,
-    label: AppStrings.roadTitle,
-    explicitChildNodes: true,
-    child: SingleChildScrollView(
-      padding: AppDimensions.sheetPadding.copyWith(
-        bottom:
-            AppDimensions.sheetPadding.bottom +
-            MediaQuery.viewInsetsOf(context).bottom,
+  Widget build(BuildContext context) => AppSheetContent(
+    title: AppStrings.roadTitle,
+    children: [
+      DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          border: Border.all(
+            color: AppColors.border,
+            width: AppDimensions.borderWidth,
+          ),
+          borderRadius: BorderRadius.circular(AppDimensions.radius22),
+        ),
+        child: Padding(
+          padding: AppDimensions.roadCardPadding,
+          child: Column(
+            children: [
+              _RoadStep(
+                number: 1,
+                title: AppStrings.step1Title,
+                meta: lessonsMeta,
+                status: lessonsStatus,
+              ),
+              _RoadStep(
+                number: 2,
+                title: AppStrings.step2Title,
+                meta: examMeta,
+                status: examStatus,
+              ),
+              const _RoadStep(
+                number: 3,
+                title: AppStrings.step3Title,
+                meta: AppStrings.step3Meta,
+                status: RoadStepStatus.locked,
+              ),
+              const _RoadStep(
+                number: 4,
+                title: AppStrings.step4Title,
+                meta: AppStrings.step4Meta,
+                status: RoadStepStatus.locked,
+                isLast: true,
+              ),
+            ],
+          ),
+        ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ExcludeSemantics(
-            child: Container(
-              width: AppDimensions.sheetHandleSize.width,
-              height: AppDimensions.sheetHandleSize.height,
-              decoration: BoxDecoration(
-                color: AppColors.handle,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusPill),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppDimensions.space16),
-          Padding(
-            padding: AppDimensions.headerPadding,
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(AppStrings.roadTitle, style: AppText.sheetTitle),
-                ),
-                const SizedBox(width: AppDimensions.space10),
-                IconButton(
-                  tooltip: AppStrings.close,
-                  onPressed: () => Navigator.of(context).pop(),
-                  constraints: const BoxConstraints.tightFor(
-                    width: AppDimensions.minTapTarget,
-                    height: AppDimensions.minTapTarget,
-                  ),
-                  padding: EdgeInsets.zero,
-                  icon: Container(
-                    width: AppDimensions.sheetCloseSize,
-                    height: AppDimensions.sheetCloseSize,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.surface,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: AppColors.ink,
-                      size: AppDimensions.sheetCloseIconSize,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppDimensions.space16),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              border: Border.all(
-                color: AppColors.border,
-                width: AppDimensions.borderWidth,
-              ),
-              borderRadius: BorderRadius.circular(AppDimensions.radius22),
-            ),
-            child: Padding(
-              padding: AppDimensions.roadCardPadding,
-              child: Column(
-                children: [
-                  _RoadStep(
-                    number: 1,
-                    title: AppStrings.step1Title,
-                    meta: lessonsMeta,
-                    status: lessonsStatus,
-                  ),
-                  _RoadStep(
-                    number: 2,
-                    title: AppStrings.step2Title,
-                    meta: examMeta,
-                    status: examStatus,
-                  ),
-                  const _RoadStep(
-                    number: 3,
-                    title: AppStrings.step3Title,
-                    meta: AppStrings.step3Meta,
-                    status: RoadStepStatus.locked,
-                  ),
-                  const _RoadStep(
-                    number: 4,
-                    title: AppStrings.step4Title,
-                    meta: AppStrings.step4Meta,
-                    status: RoadStepStatus.locked,
-                    isLast: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
+    ],
   );
 }
 

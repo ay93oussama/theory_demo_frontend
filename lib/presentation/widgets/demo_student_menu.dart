@@ -193,7 +193,7 @@ class _StudentMenuItem extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Text(
-                  student.name.characters.first.toUpperCase(),
+                  student.initial,
                   style: AppText.studentMenuInitial,
                   textScaler: TextScaler.noScaling,
                 ),

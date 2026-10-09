@@ -207,6 +207,11 @@ void main() {
           inSheet(find.text('${scenario.$2} von 1 besucht')),
           findsOneWidget,
         );
+        final title = inSheet(find.text(AppStrings.sectionSpecial));
+        await tester.ensureVisible(title);
+        await tester.fling(title, const Offset(0, 400), 1200);
+        await tester.pumpAndSettle();
+        expect(sheet, findsNothing);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());
       }
