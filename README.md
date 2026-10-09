@@ -1,140 +1,290 @@
 # Theory Progress
 
-A German Flutter app for Class B theory attendance, built as a frontend interview
-task. The targets are iPhone 17 Pro Max and an Android simulator.
+Theory Progress is a German Flutter application that shows a Class B driving
+student's theory attendance using a separate Spring Boot backend. It implements
+the frontend interview task: progress for basic and special topics, clear
+completion status, loading, and recoverable errors.
 
-## Current milestone
+The project follows a layer-based clean architecture with `core`, `data`,
+`domain`, and `presentation`. The goal is readable code, explicit responsibilities,
+and a small set of meaningful tests.
 
-Task 1 establishes the app shell, German copy catalogue, Material 3 theme and
-design tokens, bundled Schibsted Grotesk fonts, layer structure, and dependencies.
-Task 2 adds framework-free failures, the use-case base, domain entities and
-progress rules, the repository contract, and the progress use case with tests.
-Task 3 adds the header/badge, section cards, next-step row, error card, and pressed
-feedback, with local fixtures in the widget tests.
-Task 4 adds the gauge card, custom-painted arc/ticks/needle, and completion copy.
-The gauge animates over 900 ms after an 80 ms delay, transitions color over 400 ms,
-and shows its final state immediately when reduced motion is enabled.
-Task 5 adds the road sheet and completed-state booking button. The sheet slides
-in over 320 ms with a 250 ms scrim fade and supports close, scrim, swipe, and system
-back dismissal. Booking shows one German toast for 2.2 seconds with a 250 ms
-fade/rise; another tap restarts its lifetime. Both honor reduced motion.
-Task 6 adds the supplied engine PNG assembly, alternating pistons, sparks and
-rotating pulley (1.2 s), RPM bar (2.4 s), checklist spinner (900 ms), skeleton
-pulse (1.4 s), and loading fade (300 ms). Reduced motion shows a static loading
-view. Controllers stop when the view is removed; the image children are reused.
-Task 7 connects the default entry point to the real API using Dio, handwritten
-models, a repository/use case, Cubit, and GetIt. Loading lasts at least 800 ms,
-concurrently with the request. Tap the student name to switch demo students;
-pull down or tap the update timestamp to refresh. A 404 has separate German copy.
-Requests for an older selection cannot overwrite the current student.
-The name now has a chevron and opens an anchored popup showing the other students
-with their initials. It replaces the student-selection bottom sheet and dismisses
-on selection, outside tap, or system back. The popup respects reduced motion and
-larger text. Name lookup, caching, and fresh selection requests use the existing
-Cubit. Opening and selection were checked against the API on iPhone 17 Pro Max;
-the updated app also built and launched on the Android emulator. Widget tests
-cover placement, dismissal, failed name lookup, and 2× text.
-See the [student popup](docs/screenshots/student-menu/iphone-popup.png).
-Task 8 verifies the app on both target simulators and improves screen-reader
-grouping: headings, explanatory copy, and retry remain separate, and errors use
-a live region. The approved visual layout is preserved.
+## Features
 
-Tap either attendance card to open its section sheet. It shows attendance,
-remaining lessons, and three expandable German answers. The first answer starts
-open; the bottom button switches sections within the same sheet. The status chip
-sits at the top right beside `Dein Fortschritt`. Counts and completion copy come
-from the existing API through Cubit; lesson topics and dates are available from
-the driving school's timetable. The road sheet remains on the next-step row.
-The section sheet was checked against the live API on iPhone 17 Pro Max, and the
-updated app launched successfully on the Android emulator. Widget tests cover
-expansion, section switching, exact chip alignment, dynamic counts, excess
-attendance, API completion precedence, and 2× text with reduced motion.
-See the [completed section sheet](docs/screenshots/section-sheet/iphone-completed-faq.png).
+- Display basic and special attendance with counts, segments, and an animated gauge.
+- Show `Theorie erledigt ✓` when the API reports overall completion.
+- Mark each completed section independently while keeping the overall API status.
+- Show zero attendance as normal progress, including `0 von 12` and `0 von 2`.
+- Animate the supplied engine illustration while loading.
+- Refresh by pulling down or tapping the update timestamp.
+- Handle missing students separately from network and server failures, with `Erneut versuchen`.
+- Switch demo students by tapping the name in the header.
+- Open section progress sheets with expandable answers and a road-to-licence sheet.
+- Show a German toast when the completed-state booking button is tapped.
+- Support German accessibility labels, larger text, and reduced motion.
 
-See [AGENTS.md](AGENTS.md) for architecture boundaries, API details, acceptance
-criteria, references, and the full task sequence. Each task is reviewed before
-its commit; work on the next task starts only after the user's instruction.
+The targets are iPhone 17 Pro Max and an Android simulator. Login, navigation to
+other pages, a topic detail list, and real exam booking are outside this prototype.
+Web and desktop are not supported targets.
 
-## Run the app
+## Screenshots
 
-Toolchain used for this milestone: Flutter 3.35.4 stable / Dart 3.9.2.
-Use Xcode and an iOS simulator on macOS, or an Android SDK/emulator installation.
+Fresh captures from the iPhone 17 Pro Max simulator, at 1320 × 2868 pixels.
+Attendance comes from the live API; the loading image captures the engine during
+a real student-selection request.
 
-```sh
-flutter pub get
-flutter devices
-flutter run -d <simulator-device-id> --dart-define=DEMO_MODE=true
+| Empty | In progress | Complete | Loading |
+| --- | --- | --- | --- |
+| <img src="docs/ios-empty.png" width="180" alt="Julian with zero theory lessons attended"> | <img src="docs/ios-in-progress.png" width="180" alt="Tom with 8 of 12 basic and 1 of 2 special topics attended"> | <img src="docs/ios-complete.png" width="180" alt="Oussama with theory complete and the exam booking button"> | <img src="docs/ios-loading.png" width="180" alt="Animated engine while theory progress loads"> |
+
+## Architecture
+
+```mermaid
+flowchart TD
+  UI[Screen and widgets] -->|User action| Cubit[TheoryProgressCubit]
+  Cubit --> UseCase[GetTheoryProgressUseCase]
+  UseCase --> Repository[TheoryProgressRepository contract]
+  Repository --> Implementation[TheoryProgressRepositoryImpl]
+  Implementation --> Source[Remote data source]
+  Source --> Dio[Dio]
+  Dio --> API[Spring Boot API]
+  Implementation -->|Either: failure or entity| UseCase
+  UseCase -->|Result handled with fold| Cubit
+  Cubit -->|Loading, loaded, or failure state| UI
 ```
 
-Select the iPhone 17 Pro Max simulator or the Android emulator explicitly.
-Web and desktop are excluded from this project; their untouched starter folders
-do not indicate supported targets.
+- **Core** contains configuration, plain Dart failures, the use-case base,
+  dependency registration, German strings, and design tokens.
+- **Domain** owns entities, progress rules, the repository contract, and the use
+  case. It has no Flutter or Dio dependencies.
+- **Data** requests the API, parses handwritten models, converts them to entities,
+  and translates transport or malformed-response errors into `AppFailure` types.
+- **Presentation** contains the Cubit, immutable states, screen, and widgets.
+  Cubit prepares display values and copy; widgets render them and forward actions.
 
-## Backend contract and configuration
+### Key implementation choices
 
-The existing Spring Boot backend is separate and is not modified by this app.
-From `/Users/oussama/StudioProjects/Backend projects/theory demo backend`, using JDK 25:
+- `flutter_bloc` is used with Cubit for the screen's small set of commands and states.
+- Repositories and use cases return `Either<AppFailure, TheoryProgress>`; Cubit
+  handles both outcomes with `fold`.
+- GetIt registration lives in `lib/core/di/injection_container.dart`. Dependencies
+  are passed through constructors, and `BlocProvider` creates and disposes Cubit.
+- Models use manual `fromJson`, `toJson`, and `toEntity` methods. There is no
+  separate mapper layer or generated model code.
+- German product and accessibility copy lives in `AppStrings`. Colors, typography,
+  dimensions, and animation values are centralized under `core/theme`.
+- Sheet visibility, toast lifetime, and animation controllers stay in local UI state.
+- Schibsted Grotesk is bundled with its [SIL Open Font License](assets/fonts/OFL.txt).
+  The engine uses supplied PNG parts and Flutter animations; the gauge uses a
+  custom painter.
 
-```sh
-./gradlew bootRun
+## API and State Handling
+
+The backend exposes one endpoint without authentication:
+
+```http
+GET /api/students/{id}/theory-progress
 ```
 
-The endpoint is `GET /api/students/{id}/theory-progress` on port **8080**.
-It returns `studentId`, `studentName`, `licenseClass`, `basicTopics`,
-`specialTopics`, and `completed`. Each topic section has `attended` and `required`.
-Unknown students return HTTP 404 with a body such as
-`{"message":"Student '999' not found"}`.
+Example response:
 
-| Runtime | Default API base URL |
+```json
+{
+  "studentId": "3",
+  "studentName": "Oussama",
+  "licenseClass": "B",
+  "basicTopics": {"attended": 12, "required": 12},
+  "specialTopics": {"attended": 2, "required": 2},
+  "completed": true
+}
+```
+
+The API's `completed` field controls overall status and booking eligibility.
+Each section is complete when `attended >= required`. Requirements and totals
+come from the response; the app does not hardcode 12, 2, or 14. Raw attendance
+counts are preserved, visual fill is clamped, and remaining counts never become
+negative. Surplus attendance in one section cannot satisfy the other section.
+
+An unknown student returns HTTP 404 with a body such as:
+
+```json
+{"message":"Student '999' not found"}
+```
+
+The app displays its German not-found message instead of the raw backend text.
+Other HTTP errors, connection failures, and invalid responses become typed
+failures with German explanations and a retry action. Dio has separate
+10-second connection, send, and receive timeouts.
+
+Loading is visible for at least 800 ms. That timer runs concurrently with the
+request, so a slower response does not incur another 800 ms afterward. Switching
+students ignores results from older requests, and closing Cubit prevents later
+emissions. Refresh and retry keep the selected student identity.
+
+The update timestamp is the client's successful response time. Its relative
+label updates every minute and when the app resumes. Student names are cached
+in memory; failed lookups or blank names use `Fahrschüler {id}`. There is no
+persistent progress cache or offline browsing. Refresh replaces the previous
+progress with the loading state.
+
+## Folder Structure
+
+```text
+theory_demo_frontend/
+├── assets/
+│   ├── engine/                 # PNG parts with 2.0x and 3.0x variants
+│   └── fonts/                  # Bundled font files and licence
+├── docs/                       # iOS state screenshots
+├── lib/
+│   ├── main.dart
+│   ├── app.dart
+│   ├── core/
+│   │   ├── config/
+│   │   ├── constants/
+│   │   ├── di/
+│   │   ├── errors/
+│   │   ├── network/
+│   │   ├── theme/
+│   │   └── usecases/
+│   ├── data/
+│   │   ├── datasources/
+│   │   ├── models/
+│   │   └── repositories/
+│   ├── domain/
+│   │   ├── entities/
+│   │   ├── repositories/
+│   │   └── usecases/
+│   └── presentation/
+│       ├── cubits/theory_progress/
+│       ├── screens/
+│       └── widgets/
+├── test/
+│   ├── data/
+│   ├── domain/
+│   ├── presentation/
+│   └── support/
+├── pubspec.yaml
+└── README.md
+```
+
+## Dependencies
+
+| Package | Purpose |
+| --- | --- |
+| `flutter_bloc` | Cubit state management and widget integration. |
+| `equatable` | Value equality for entities, parameters, and states. |
+| `dio` | HTTP requests, timeouts, and transport errors. |
+| `dartz` | Explicit success/failure results with `Either` and `fold`. |
+| `get_it` | Central dependency registration. |
+| `flutter_test` | Unit and widget tests using small fakes. |
+| `flutter_lints` | Static analysis rules. |
+
+There are no code-generation, router, localization, font-download, or external
+animation packages. No `build_runner` or `gen-l10n` step is required.
+
+## Setup
+
+The app was verified with **Flutter 3.35.4 / Dart 3.9.2**. Use Xcode on macOS for
+the iOS simulator, or an Android SDK and emulator. The separate backend requires
+**JDK 25** and includes a Gradle wrapper.
+
+1. From the frontend checkout, check the toolchain and install dependencies:
+
+   ```sh
+   flutter doctor
+   flutter pub get
+   flutter devices
+   ```
+
+2. In another terminal, from the backend checkout, start the API:
+
+   ```sh
+   ./gradlew bootRun
+   ```
+
+   It listens on port **8080** with the current configuration. Verify it from
+   the host machine:
+
+   ```sh
+   curl http://localhost:8080/api/students/3/theory-progress
+   ```
+
+3. Start a target simulator and run the frontend using its ID from `flutter devices`.
+
+## Running the App
+
+The default API URL depends on the target platform:
+
+| Target | Default API base URL |
 | --- | --- |
 | iOS simulator | `http://localhost:8080` |
 | Android emulator | `http://10.0.2.2:8080` |
 
-Configure the URL and initial student at build time:
-
 ```sh
-flutter run -d <ios-simulator-id> --dart-define=API_BASE_URL=http://localhost:8080 --dart-define=STUDENT_ID=3
-flutter run -d <android-emulator-id> --dart-define=API_BASE_URL=http://10.0.2.2:8080 --dart-define=STUDENT_ID=1
+flutter run -d <simulator-device-id>
 ```
 
-`STUDENT_ID` defaults to `1`. `DEMO_MODE` defaults to true in debug builds and false
-in profile/release; override it with `--dart-define=DEMO_MODE=true` or `false`.
-In demo mode, tap the name to choose IDs 1 (Tom, in progress), 2 (Julian, no
-attendance), or 3 (Oussama, complete). Names come from the API and are cached;
-failed name lookups keep a selectable `Fahrschüler {id}` fallback. The badge has
-no action. Selection always fetches fresh progress and resets on app restart.
+Configuration is supplied at build time through Dart defines:
 
-HTTP exceptions are limited to emulator/loopback hosts on Android and local
-networking on iOS. For a custom remote API URL, use HTTPS. Connection, send, and
-receive timeouts are 10 seconds. Use `STUDENT_ID=999` to demonstrate the real 404,
-or `API_BASE_URL=http://localhost:8081` on iOS to demonstrate an unreachable API
-when that port is unused. Restart the app after changing dart-defines.
+| Define | Default | Purpose |
+| --- | --- | --- |
+| `API_BASE_URL` | Platform URL above | Backend base URL, without the endpoint path. |
+| `STUDENT_ID` | `1` | Initial student to fetch. |
+| `DEMO_MODE` | `true` in debug; `false` in profile/release | Enable the name-tap student selector. |
 
-The timestamp records the client's successful response time. It updates every
-minute and on app resume. Pull-to-refresh and retry keep the selected student;
-loading removes the previous student's progress while keeping a matching cached
-name. Overall completion always follows API `completed`; section completion uses
-the API attendance and requirement counts.
+Explicit iOS example:
 
-## Architecture
+```sh
+flutter run -d <ios-simulator-id> \
+  --dart-define=API_BASE_URL=http://localhost:8080 \
+  --dart-define=STUDENT_ID=3 \
+  --dart-define=DEMO_MODE=true
+```
 
-- `core`: shared configuration, failures, use-case base, DI, tokens, and strings.
-- `data`: Dio data sources, handwritten JSON models, repository implementations.
-- `domain`: immutable entities, progress rules, repository interfaces, use cases.
-- `presentation`: Cubit states, the screen, and rendering/interaction widgets.
+Explicit Android example:
 
-The data flow is screen → Cubit → use case → repository → data source.
-Repositories return `Either<AppFailure, TheoryProgress>`; Cubit uses `fold`.
-GetIt constructs dependencies; classes receive them through constructors.
-The domain and shared failure types have no Flutter or Dio dependencies.
+```sh
+flutter run -d <android-emulator-id> \
+  --dart-define=API_BASE_URL=http://10.0.2.2:8080 \
+  --dart-define=STUDENT_ID=2 \
+  --dart-define=DEMO_MODE=true
+```
 
-Packages: `flutter_bloc`, `equatable`, `dio`, `dartz`, and `get_it`.
-German strings use `AppStrings`; there is no localization or code generation.
-Fonts are bundled for offline use with their [licence](assets/fonts/OFL.txt).
-The engine uses the six supplied PNG parts in `assets/engine/`, with their 2× and
-3× variants; it needs no animation package or network access.
+Restart `flutter run` after changing a define; hot reload does not replace the
+build-time configuration. Android allows HTTP only for the emulator host and
+loopback addresses. iOS permits local networking. Use HTTPS for a remote API.
 
-## Checks
+### Demo students
+
+Tap the student name to open the anchored menu, which lists the other students.
+The current backend seeds are:
+
+| ID | Name from API | Basic topics | Special topics | State |
+| --- | --- | --- | --- | --- |
+| `1` | Julian | 0 / 12 | 0 / 2 | Empty attendance |
+| `2` | Tom | 8 / 12 | 1 / 2 | In progress |
+| `3` | Oussama | 12 / 12 | 2 / 2 | Complete |
+
+Only IDs are configured in the frontend. Names are fetched from the endpoint;
+a failed name lookup keeps that student selectable using the fallback label.
+Selection fetches fresh progress. Restarting the app returns to `STUDENT_ID`.
+Only-one-section-complete scenarios are covered by test fixtures because the
+current backend seeds do not include them.
+
+To demonstrate the real 404 response:
+
+```sh
+flutter run -d <simulator-device-id> --dart-define=STUDENT_ID=999
+```
+
+To demonstrate a connection error on iOS, use an unused local port:
+
+```sh
+flutter run -d <ios-simulator-id> \
+  --dart-define=API_BASE_URL=http://localhost:8081
+```
+
+## QA and Testing
 
 ```sh
 dart format --output=none --set-exit-if-changed lib test
@@ -142,24 +292,28 @@ flutter analyze
 flutter test
 ```
 
-The tests cover the five progress scenarios, API completion precedence, dynamic
-requirements, excess attendance, invalid section counts, use-case success/failure
-forwarding, German startup copy even on an English device, section labels, name
-taps, error retry, and component layout at 2× text scale. Gauge tests cover German
-completion wording and semantic totals, dynamic requirements, reduced motion,
-animation lifecycle, and disposal during its initial delay. Interaction tests cover
-sheet statuses/dismissal, booking copy, repeated taps without stacking, toast
-expiry/disposal, and large text with reduced motion. Two loading tests cover German
-copy/semantics, animation disposal, changing reduced-motion preferences, and 2×
-text. Data tests check JSON round-tripping, the request contract, 404/server/network
-failure conversion, and malformed data. Cubit tests cover the 800 ms minimum,
-slow responses, retry, cached names, timestamps, stale selection results, and
-closure. Screen tests exercise German progress/completion/zero states, selector,
-booking, retry, timestamp refresh, and pull-to-refresh using a fake repository.
-Goldens and a dedicated integration suite are deferred. Both target simulators
-run against the real backend. See [the verification record](docs/verification.md)
-for the states, accessibility checks, and limits of the manual device coverage.
+The current suite has **41 passing tests**, with clean formatting and zero
+analyzer issues. Tests use local fakes and do not require the backend.
 
-The final interview handoff in task 9 will expand this README with the completed
-architecture diagram, state screenshots/GIFs, verified platform commands,
-decisions, trade-offs, and next steps.
+| Area | Coverage |
+| --- | --- |
+| Domain and use case | Zero, partial, section-only and complete progress; API completion precedence; dynamic requirements; surplus attendance; invalid counts; repository forwarding. |
+| Data | Manual JSON round-tripping, endpoint contract, entity conversion, mismatched student IDs, and HTTP/network/malformed-response failure mapping. |
+| Cubit | Success, retry, minimum loading time, slow and stale requests, disposal, cached names, and timestamp updates. |
+| Widgets | German counts and completion wording, booking toast, errors, student selection, blank names, refresh, sheets, large text, reduced motion, and animation lifecycle. |
+
+The app has run against the backend on iPhone 17 Pro Max (iOS 26.5) and an Android
+API 36 emulator. Live student switching and refresh were exercised on iOS; the
+four screenshots above are fresh iOS captures. Native swipe gestures are covered
+by widget tests rather than a manual simulator swipe check. Golden tests, a
+dedicated integration suite, and profile-mode performance measurements are deferred.
+
+For a manual walkthrough:
+
+- Switch between the three students and check their counts and overall status.
+- Refresh through the timestamp and pull-to-refresh; check the loading transition.
+- Open both section sheets, expand answers, switch sections, and dismiss them.
+- Open the road sheet and tap the booking button in the completed state. Booking
+  shows `Die Prüfungsbuchung ist nicht Teil dieses Prototyps` without navigation.
+- Launch with an unknown ID or unused API port, then exercise retry and recovery.
+- Check larger system text and reduced motion, including sheet scrolling and dismissal.
